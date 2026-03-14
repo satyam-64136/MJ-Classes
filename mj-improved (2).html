@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJ Spoken English — Speak With Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Fraunces:ital,wght@0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════════════════ */
+:root {
+  /* Richer, more saturated color system */
+  --glacier:       #EAF9F2;
+  --glacier-dark:  #CCE9DC;
+  --storm:         #0C1A1D;
+  --storm-med:     #1F3038;
+  --storm-light:   #4D6870;
+  --arctic:        #72D9D0;
+  --arctic-light:  #B8F0ED;
+  --lagoon:        #178C7A;
+  --lagoon-dark:   #0F6E5F;
+  --lagoon-darker: #09504A;
+
+  --bg:         var(--glacier);
+  --card-bg:    #FFFFFF;
+  --text:       var(--storm);
+  --text-med:   var(--storm-med);
+  --text-light: var(--storm-light);
+  --accent:     var(--lagoon);
+
+  --r-sm: 8px;
+  --r:    12px;
+  --r-md: 16px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+
+  --sp-xs:  8px;
+  --sp-sm:  16px;
+  --sp-md:  20px;
+  --sp-lg:  28px;
+  --sp-xl:  40px;
+  --sp-xxl: 56px;
+  --sp-3xl: 72px;
+
+  --max-w: 1200px;
+  --pad-x: clamp(18px, 5%, 60px);
+
+  --shadow-sm: 0 2px 12px rgba(9, 26, 22, 0.09);
+  --shadow:    0 4px 20px rgba(9, 26, 22, 0.13);
+  --shadow-md: 0 8px 30px rgba(9, 26, 22, 0.16);
+  --shadow-lg: 0 12px 40px rgba(9, 26, 22, 0.2);
+  --shadow-xl: 0 20px 60px rgba(9, 26, 22, 0.26);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video { display: block; max-width: 100%; height: auto; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ══════════════════════════════════════════════════
+   CONTAINER
+══════════════════════════════════════════════════ */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+  width: 100%;
+}
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(9, 26, 22, 0.1), transparent);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════════════ */
+#loader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--glacier);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: var(--sp-xl);
+}
+
+.ldr-logo {
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  font-weight: 700; letter-spacing: .08em;
+  color: var(--storm); text-transform: uppercase;
+  overflow: hidden;
+  font-family: 'Fraunces', serif;
+}
+
+.ldr-logo span { display: inline-block; opacity: 0; transform: translateY(100%); }
+
+.ldr-num {
+  font-size: clamp(3rem, 8vw, 4.5rem); font-weight: 800;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1; opacity: 0; min-width: 3ch; text-align: center;
+  font-family: 'Fraunces', serif;
+}
+
+.ldr-bar-wrap {
+  width: clamp(200px, 60vw, 280px); height: 3px;
+  background: rgba(9, 26, 22, 0.1); border-radius: 999px; overflow: hidden;
+}
+
+.ldr-bar {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--lagoon), var(--arctic));
+  border-radius: 999px;
+}
+
+.ldr-label {
+  font-size: .7rem; font-weight: 600; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--text-light);
+}
+
+/* ══════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════ */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: var(--sp-sm) var(--pad-x);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#nav.stuck {
+  padding: 12px var(--pad-x);
+  background: rgba(234, 249, 242, 0.97);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 1px 0 rgba(9, 26, 22, 0.06), 0 4px 20px rgba(9, 26, 22, 0.08);
+}
+
+.nav-logo {
+  font-weight: 900; font-size: clamp(1.1rem, 4vw, 1.4rem);
+  letter-spacing: -.02em; color: var(--storm);
+}
+
+.nav-logo strong {
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.nav-links { display: none; align-items: center; gap: var(--sp-lg); list-style: none; }
+
+.nav-links a {
+  font-size: .875rem; font-weight: 700;
+  color: var(--storm-med); transition: color 0.25s ease; position: relative;
+}
+
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+  background: var(--lagoon); transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-links a:hover, .nav-links a.active { color: var(--lagoon); }
+
+.nav-cta {
+  display: none; padding: 11px 24px; border-radius: var(--r);
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  color: white; font-size: .875rem; font-weight: 700;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(23, 140, 122, 0.32);
+  cursor: pointer;
+}
+
+.nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(23, 140, 122, 0.45);
+}
+
+.nav-burger { display: flex; flex-direction: column; gap: 5px; padding: 8px; }
+.nav-burger span { width: 22px; height: 2px; background: var(--storm); display: block; transition: 0.3s; border-radius: 2px; }
+
+#mob-nav {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(234, 249, 242, 0.98); backdrop-filter: blur(40px);
+  flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-lg);
+}
+
+#mob-nav.open { display: flex; }
+
+#mob-nav a {
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 700; color: var(--storm); transition: color 0.3s;
+  font-family: 'Fraunces', serif;
+}
+
+#mob-nav a:hover { color: var(--lagoon); }
+
+#mob-close {
+  position: absolute; top: var(--sp-md); right: var(--sp-md);
+  font-size: 1.75rem; color: var(--storm); cursor: pointer;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r); transition: background 0.25s; font-weight: 300;
+}
+
+#mob-close:hover { background: rgba(9, 26, 22, 0.08); }
+
+@media (min-width: 768px) {
+  .nav-links { display: flex; }
+  .nav-cta { display: inline-block; }
+  .nav-burger { display: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   TYPOGRAPHY
+══════════════════════════════════════════════════ */
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--lagoon); background: rgba(23, 140, 122, 0.1);
+  padding: 7px 16px; border-radius: 999px; margin-bottom: var(--sp-md);
+  border: 1.5px solid rgba(23, 140, 122, 0.25);
+}
+
+.section-title {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+  color: var(--storm); margin-bottom: var(--sp-sm);
+  font-family: 'Fraunces', serif;
+}
+
+.section-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.section-desc {
+  font-size: clamp(.9375rem, 2vw, 1.0625rem);
+  line-height: 1.75; color: var(--text-med); max-width: 560px;
+}
+
+/* ══════════════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════════════ */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 15px 30px; border-radius: var(--r);
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  color: white; font-size: 1rem; font-weight: 700; letter-spacing: -.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 24px rgba(23, 140, 122, 0.38);
+  border: none; width: 100%; max-width: 100%;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(23, 140, 122, 0.52);
+  background: linear-gradient(135deg, var(--lagoon-dark), var(--lagoon-darker));
+}
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 15px 30px; border-radius: var(--r);
+  border: 2px solid var(--storm);
+  background: white; font-size: 1rem; font-weight: 700; color: var(--storm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  width: 100%; max-width: 100%; justify-content: center;
+}
+
+.btn-secondary:hover {
+  border-color: var(--lagoon); color: white;
+  background: var(--lagoon); transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(23, 140, 122, 0.35);
+}
+
+@media (min-width: 768px) {
+  .btn-primary, .btn-secondary { width: auto; max-width: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   HERO SECTION
+══════════════════════════════════════════════════ */
+#hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex; align-items: center;
+  padding: calc(var(--sp-xxl) + 60px) 0 var(--sp-xxl);
+  overflow: hidden;
+  background: linear-gradient(160deg, #EAF9F2 0%, #D4F2E6 45%, #BEEADA 100%);
+}
+
+/* Dot grid overlay */
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(23, 140, 122, 0.2) 1.5px, transparent 1.5px);
+  background-size: 36px 36px;
+  z-index: 0; pointer-events: none;
+}
+
+.hero-content {
+  position: relative; z-index: 1;
+  text-align: center;
+  max-width: 880px; margin: 0 auto;
+  padding: 0 var(--pad-x);
+}
+
+.hero-tag {
+  font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--lagoon); background: rgba(23, 140, 122, 0.12);
+  padding: 8px 18px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: var(--sp-md); border: 1.5px solid rgba(23, 140, 122, 0.28);
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 10vw, 6rem);
+  font-weight: 900; line-height: 1.05; letter-spacing: -.04em;
+  color: var(--storm); margin-bottom: var(--sp-md);
+  font-family: 'Fraunces', serif;
+}
+
+.hero-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--lagoon), #0B7868);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  display: inline;
+}
+
+.hero-desc {
+  font-size: clamp(.9375rem, 2.5vw, 1.125rem);
+  line-height: 1.75; color: var(--storm-med);
+  margin-bottom: var(--sp-lg);
+  max-width: 520px; margin-left: auto; margin-right: auto;
+}
+
+.hero-buttons {
+  display: flex; flex-direction: column; gap: var(--sp-sm); align-items: stretch;
+  margin-bottom: var(--sp-lg);
+}
+
+/* Social proof strip */
+.hero-proof {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap;
+  font-size: .8125rem; color: var(--storm-light); font-weight: 600;
+}
+
+.hero-proof-avatars { display: flex; }
+
+.hero-proof-avatars span {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  border: 2.5px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 700; color: white;
+  margin-left: -9px; box-shadow: 0 2px 8px rgba(23, 140, 122, 0.3);
+}
+
+.hero-proof-avatars span:first-child { margin-left: 0; }
+
+.hero-proof-sep {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(9, 26, 22, 0.2); display: inline-block;
+}
+
+.hero-proof-stars { color: #F59E0B; font-size: .9rem; letter-spacing: 2px; }
+
+.hero-blob {
+  position: absolute; border-radius: 50%; filter: blur(110px); opacity: 0.45;
+  pointer-events: none; z-index: 0;
+}
+
+.hero-blob-1 { width: 520px; height: 520px; background: var(--arctic); top: -10%; left: -15%; }
+.hero-blob-2 { width: 420px; height: 420px; background: var(--lagoon); bottom: 0%; right: -15%; }
+
+@media (min-width: 768px) {
+  #hero { min-height: 96vh; }
+  .hero-buttons { flex-direction: row; justify-content: center; }
+}
+
+/* ══════════════════════════════════════════════════
+   ABOUT SECTION
+══════════════════════════════════════════════════ */
+#about {
+  position: relative;
+  padding: var(--sp-xxl) 0;
+  background: white;
+}
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr; gap: var(--sp-lg); align-items: center;
+}
+
+.about-text h2 {
+  font-size: clamp(1.75rem, 6vw, 3.2rem);
+  font-weight: 800; line-height: 1.12; color: var(--storm);
+  margin-bottom: var(--sp-md); letter-spacing: -.03em;
+  font-family: 'Fraunces', serif;
+}
+
+.about-text h2 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.about-text p {
+  font-size: clamp(.9375rem, 2vw, 1rem);
+  line-height: 1.75; color: var(--text-med);
+  margin-bottom: var(--sp-sm); max-width: 540px;
+}
+
+.about-highlights {
+  display: grid; grid-template-columns: 1fr; gap: var(--sp-sm); margin-top: var(--sp-md);
+}
+
+.highlight-item {
+  background: var(--glacier);
+  border: 1.5px solid rgba(23, 140, 122, 0.14);
+  border-radius: var(--r-md); padding: var(--sp-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(9, 26, 22, 0.05);
+}
+
+.highlight-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(9, 26, 22, 0.1);
+  border-color: rgba(23, 140, 122, 0.4);
+  background: white;
+}
+
+.highlight-item h4 {
+  font-size: 1rem; font-weight: 700; color: var(--storm);
+  margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+}
+
+.highlight-item .icon { width: 20px; height: 20px; color: var(--lagoon); flex-shrink: 0; }
+
+.highlight-item p { font-size: .875rem; line-height: 1.6; color: var(--text-light); margin: 0; }
+
+/* About visual — rich stat card layout */
+.about-visual {
+  position: relative;
+  aspect-ratio: 4/3; border-radius: var(--r-xl);
+  background: linear-gradient(145deg, #E4F8EF 0%, #C4EADB 50%, #AADFCE 100%);
+  border: 1.5px solid rgba(23, 140, 122, 0.2);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 16px 56px rgba(9, 26, 22, 0.14), 0 2px 8px rgba(23, 140, 122, 0.12);
+  padding: var(--sp-xl);
+  gap: var(--sp-md);
+}
+
+.about-visual::before {
+  content: 'MJ';
+  font-size: clamp(8rem, 22vw, 16rem);
+  font-weight: 900; font-family: 'Fraunces', serif;
+  color: rgba(23, 140, 122, 0.07);
+  position: absolute; user-select: none; line-height: 1;
+  pointer-events: none;
+}
+
+.about-stat-cards {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+  width: 100%; max-width: 340px;
+}
+
+.about-stat-card {
+  background: white;
+  border-radius: var(--r-md); padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(9, 26, 22, 0.12);
+  border: 1.5px solid rgba(23, 140, 122, 0.12);
+  transition: transform 0.3s;
+}
+
+.about-stat-card:hover { transform: translateY(-3px); }
+
+.about-stat-card .num {
+  font-size: 1.75rem; font-weight: 800; line-height: 1;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  font-family: 'Fraunces', serif; margin-bottom: 4px; display: block;
+}
+
+.about-stat-card .lbl {
+  font-size: .7rem; font-weight: 700; color: var(--storm-light);
+  text-transform: uppercase; letter-spacing: .07em; line-height: 1.3;
+}
+
+.about-badge {
+  position: relative; z-index: 2;
+  background: var(--lagoon);
+  color: white; border-radius: var(--r-md);
+  padding: 12px 20px; font-size: .9375rem; font-weight: 700;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 6px 24px rgba(23, 140, 122, 0.45);
+}
+
+@media (min-width: 768px) {
+  #about { padding: var(--sp-3xl) 0; }
+  .about-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xxl); }
+  .about-highlights { grid-template-columns: repeat(2, 1fr); gap: var(--sp-md); margin-top: var(--sp-xl); }
+}
+
+/* ══════════════════════════════════════════════════
+   COURSES SECTION
+══════════════════════════════════════════════════ */
+#courses {
+  position: relative; padding: var(--sp-xxl) 0;
+  background: var(--bg); opacity: 1 !important; visibility: visible !important; display: block !important; z-index: 1;
+}
+
+.courses-header { text-align: center; margin-bottom: var(--sp-lg); }
+
+.courses-grid {
+  display: grid !important; grid-template-columns: 1fr; gap: var(--sp-md);
+  opacity: 1 !important; visibility: visible !important;
+}
+
+.course-card {
+  background: white; border: 1.5px solid rgba(9, 26, 22, 0.1);
+  border-radius: var(--r-md); padding: var(--sp-lg);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; overflow: hidden;
+  box-shadow: 0 3px 14px rgba(9, 26, 22, 0.07);
+  opacity: 1 !important; visibility: visible !important;
+}
+
+.course-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--lagoon), var(--arctic));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
+}
+
+.course-card:hover::before { transform: scaleX(1); }
+
+.course-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(23, 140, 122, 0.35);
+  box-shadow: 0 24px 64px rgba(9, 26, 22, 0.16);
+}
+
+/* Level badge */
+.course-level {
+  position: absolute; top: 16px; right: 16px;
+  font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(23, 140, 122, 0.1); color: var(--lagoon);
+  border: 1px solid rgba(23, 140, 122, 0.22);
+}
+
+.course-icon {
+  width: 60px; height: 60px; border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(23, 140, 122, 0.14), rgba(114, 217, 208, 0.14));
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--sp-md); color: var(--lagoon);
+  border: 1.5px solid rgba(23, 140, 122, 0.28); transition: all 0.3s;
+}
+
+.course-icon i { width: 28px; height: 28px; }
+
+.course-card:hover .course-icon {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  color: white; border-color: var(--lagoon);
+}
+
+.course-card h3 {
+  font-size: clamp(1.2rem, 4vw, 1.4rem); font-weight: 700;
+  margin-bottom: 6px; color: var(--storm);
+  font-family: 'Fraunces', serif;
+}
+
+.course-duration {
+  font-size: .8125rem; color: var(--lagoon); font-weight: 700;
+  margin-bottom: var(--sp-sm); display: flex; align-items: center; gap: 6px;
+}
+
+.course-card p { font-size: .9375rem; line-height: 1.65; color: var(--text-med); margin-bottom: var(--sp-md); }
+
+.course-features { list-style: none; padding: 0; margin: 0; }
+
+.course-features li {
+  font-size: .875rem; color: var(--text-med);
+  padding: 8px 0; padding-left: 26px; position: relative;
+  border-bottom: 1px solid rgba(9, 26, 22, 0.06);
+}
+
+.course-features li:last-child { border-bottom: none; }
+
+.course-features li::before {
+  content: '✓'; position: absolute; left: 4px;
+  color: var(--lagoon); font-weight: 700; font-size: .75rem;
+  top: 50%; transform: translateY(-50%);
+}
+
+@media (min-width: 768px) {
+  #courses { padding: var(--sp-3xl) 0; }
+  .courses-header { margin-bottom: var(--sp-xxl); }
+  .courses-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-lg); }
+}
+
+@media (min-width: 1024px) {
+  .courses-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ══════════════════════════════════════════════════
+   ACTIVITIES SECTION
+══════════════════════════════════════════════════ */
+#activities { position: relative; padding: var(--sp-xxl) 0; background: white; }
+.activities-header { text-align: center; margin-bottom: var(--sp-lg); }
+
+.activities-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-sm); }
+
+.activity-card {
+  background: white;
+  border: 1.5px solid rgba(9, 26, 22, 0.08);
+  border-radius: var(--r-md); padding: var(--sp-md);
+  text-align: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 10px rgba(9, 26, 22, 0.06);
+}
+
+.activity-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(23, 140, 122, 0.3);
+  box-shadow: 0 16px 48px rgba(9, 26, 22, 0.12);
+}
+
+.activity-icon {
+  width: 56px; height: 56px; margin: 0 auto var(--sp-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lagoon);
+  background: linear-gradient(135deg, rgba(23, 140, 122, 0.12), rgba(114, 217, 208, 0.12));
+  border-radius: var(--r-md);
+  border: 1.5px solid rgba(23, 140, 122, 0.2);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.activity-icon i { width: 26px; height: 26px; }
+
+.activity-card:hover .activity-icon {
+  transform: scale(1.12);
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  color: white; border-color: var(--lagoon);
+}
+
+.activity-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: #0C1A1D; }
+.activity-card p { font-size: .875rem; line-height: 1.65; color: #1F3038; margin: 0; opacity: 1; visibility: visible; }
+
+@media (min-width: 480px) {
+  .activities-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-md); }
+}
+
+@media (min-width: 768px) {
+  #activities { padding: var(--sp-3xl) 0; }
+  .activities-header { margin-bottom: var(--sp-xxl); }
+  .activities-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══════════════════════════════════════════════════
+   STATS SECTION — Rich dark band
+══════════════════════════════════════════════════ */
+#stats {
+  position: relative; padding: var(--sp-xl) 0;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-darker));
+  overflow: hidden;
+}
+
+#stats::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1.5px, transparent 1.5px);
+  background-size: 28px 28px; pointer-events: none;
+}
+
+.stats-grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-lg); text-align: center;
+}
+
+.stat-item { padding: var(--sp-sm); }
+
+.stat-icon {
+  width: 44px; height: 44px; margin: 0 auto var(--sp-sm);
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  transition: transform 0.3s;
+}
+
+.stat-icon i { width: 22px; height: 22px; }
+.stat-item:hover .stat-icon { transform: scale(1.1); }
+
+.stat-number {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800; color: white; line-height: 1;
+  margin-bottom: var(--sp-xs); display: block;
+  font-family: 'Fraunces', serif;
+}
+
+.stat-label { font-size: clamp(.8125rem, 2vw, .9375rem); font-weight: 600; color: rgba(255, 255, 255, 0.82); }
+
+@media (min-width: 768px) {
+  #stats { padding: var(--sp-xxl) 0; }
+  .stats-grid { grid-template-columns: repeat(4, 1fr); gap: var(--sp-xxl); }
+}
+
+/* ══════════════════════════════════════════════════
+   TESTIMONIALS SECTION
+══════════════════════════════════════════════════ */
+#testimonials {
+  position: relative; padding: var(--sp-xxl) 0;
+  background: var(--bg); opacity: 1 !important; visibility: visible !important; display: block !important; z-index: 1;
+}
+
+.testimonials-header { text-align: center; margin-bottom: var(--sp-lg); }
+
+.testimonials-grid {
+  display: grid !important; grid-template-columns: 1fr;
+  gap: var(--sp-md); opacity: 1 !important; visibility: visible !important;
+}
+
+.testimonial-card {
+  background: white; border-radius: var(--r-md);
+  border: 1.5px solid rgba(9, 26, 22, 0.07);
+  padding: var(--sp-lg); position: relative;
+  box-shadow: 0 4px 20px rgba(9, 26, 22, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1 !important; visibility: visible !important;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(9, 26, 22, 0.14);
+  border-color: rgba(23, 140, 122, 0.28);
+}
+
+.testimonial-card::before {
+  content: '"'; position: absolute; top: 8px; left: 16px;
+  font-size: 5.5rem; font-weight: 900; line-height: 1;
+  color: rgba(23, 140, 122, 0.08); pointer-events: none;
+  font-family: 'Fraunces', serif;
+}
+
+/* Star ratings */
+.testimonial-stars { display: flex; gap: 3px; margin-bottom: 12px; position: relative; z-index: 1; }
+.testimonial-stars span { font-size: 1rem; color: #F59E0B; }
+
+.testimonial-text {
+  font-size: .9375rem; line-height: 1.75; color: var(--text-med);
+  margin-bottom: var(--sp-md); position: relative; z-index: 1;
+  font-style: italic;
+}
+
+.testimonial-author { display: flex; align-items: center; gap: var(--sp-sm); }
+
+.author-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--lagoon), var(--lagoon-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .9375rem; color: white;
+  box-shadow: 0 4px 16px rgba(23, 140, 122, 0.3); flex-shrink: 0;
+}
+
+.author-info h5 { font-size: .9375rem; font-weight: 700; color: var(--storm); margin-bottom: 3px; }
+.author-info p { font-size: .8rem; color: var(--text-light); margin: 0; }
+
+@media (min-width: 768px) {
+  #testimonials { padding: var(--sp-3xl) 0; }
+  .testimonials-header { margin-bottom: var(--sp-xxl); }
+  .testimonials-grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-lg); }
+}
+
+@media (min-width: 1024px) {
+  .testimonials-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══════════════════════════════════════════════════
+   DEMO SECTION
+══════════════════════════════════════════════════ */
+#demo { position: relative; padding: var(--sp-xxl) 0; background: white; }
+.demo-header { text-align: center; margin-bottom: var(--sp-lg); }
+.demo-grid { display: grid; grid-template-columns: 1fr; gap: var(--sp-lg); }
+
+.demo-info h3 {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 800; color: var(--storm);
+  margin-bottom: var(--sp-sm); line-height: 1.2;
+  font-family: 'Fraunces', serif;
+}
+
+.demo-info p {
+  font-size: clamp(.9375rem, 2vw, 1rem); line-height: 1.75;
+  color: var(--text-med); margin-bottom: var(--sp-md); max-width: 500px;
+}
+
+.demo-features { list-style: none; padding: 0; margin: 0; margin-bottom: var(--sp-lg); }
+
+.demo-features li {
+  display: flex; align-items: center; gap: var(--sp-sm);
+  padding: var(--sp-sm) 0; font-size: .9375rem; font-weight: 500; color: var(--storm);
+  border-bottom: 1px solid rgba(9, 26, 22, 0.07);
+}
+
+.demo-features li:last-child { border-bottom: none; }
+
+.demo-features li::before {
+  content: '✓';
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(23, 140, 122, 0.11); border: 1.5px solid var(--lagoon);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--lagoon); font-weight: 700; font-size: .7rem;
+}
+
+.demo-form {
+  background: white;
+  border: 1.5px solid rgba(9, 26, 22, 0.1);
+  border-radius: var(--r-lg); padding: var(--sp-lg);
+  box-shadow: 0 8px 40px rgba(9, 26, 22, 0.1);
+}
+
+.form-group { margin-bottom: var(--sp-md); }
+
+.form-group label {
+  display: block; font-size: .8125rem; font-weight: 700; color: var(--storm);
+  margin-bottom: 8px; letter-spacing: .01em;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%; padding: 13px 15px;
+  background: var(--glacier);
+  border: 1.5px solid rgba(9, 26, 22, 0.14);
+  border-radius: var(--r); color: var(--storm);
+  font-family: inherit; font-size: .9375rem; transition: all 0.25s ease;
+  appearance: none;
+}
+
+.form-group input::placeholder, .form-group textarea::placeholder {
+  color: rgba(9, 26, 22, 0.32);
+}
+
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231F3038' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  background-size: 18px; padding-right: 40px; cursor: pointer;
+  background-color: var(--glacier);
+}
+
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  outline: none; border-color: var(--lagoon); background: white;
+  box-shadow: 0 0 0 3px rgba(23, 140, 122, 0.12);
+}
+
+.form-group textarea { resize: vertical; min-height: 100px; }
+
+@media (min-width: 768px) {
+  #demo { padding: var(--sp-3xl) 0; }
+  .demo-header { margin-bottom: var(--sp-xxl); }
+  .demo-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xxl); }
+  .demo-info { position: sticky; top: 140px; }
+  .demo-form { padding: var(--sp-xxl) var(--sp-xl); }
+}
+
+/* ══════════════════════════════════════════════════
+   LOCATION SECTION
+══════════════════════════════════════════════════ */
+#location {
+  position: relative; padding: var(--sp-xxl) 0;
+  background: var(--bg); opacity: 1 !important; visibility: visible !important; display: block !important; z-index: 1;
+}
+
+.location-header { text-align: center; margin-bottom: var(--sp-lg); }
+
+.location-grid {
+  display: grid !important; grid-template-columns: 1fr; gap: var(--sp-md);
+  opacity: 1 !important; visibility: visible !important;
+}
+
+.location-map {
+  aspect-ratio: 16/10; border-radius: var(--r-md); background: white;
+  border: 1.5px solid rgba(9, 26, 22, 0.1);
+  box-shadow: 0 6px 30px rgba(9, 26, 22, 0.1);
+  min-height: 300px; overflow: hidden;
+  opacity: 1 !important; visibility: visible !important;
+}
+
+.location-map iframe { width: 100%; height: 100%; border: none; border-radius: var(--r-md); display: block; }
+
+.location-details { display: flex; flex-direction: column; gap: var(--sp-sm); }
+
+.location-item {
+  display: flex; gap: var(--sp-sm); background: white;
+  padding: var(--sp-md); border-radius: var(--r);
+  border: 1.5px solid rgba(9, 26, 22, 0.08);
+  transition: all 0.3s; box-shadow: 0 2px 10px rgba(9, 26, 22, 0.06);
+}
+
+.location-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(23, 140, 122, 0.3);
+  box-shadow: 0 8px 28px rgba(9, 26, 22, 0.1);
+}
+
+.location-icon {
+  width: 48px; height: 48px; border-radius: var(--r);
+  background: linear-gradient(135deg, rgba(23, 140, 122, 0.14), rgba(114, 217, 208, 0.14));
+  display: flex; align-items: center; justify-content: center;
+  color: var(--lagoon); flex-shrink: 0;
+  border: 1.5px solid rgba(23, 140, 122, 0.22);
+}
+
+.location-icon i { width: 22px; height: 22px; }
+
+.location-text h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; color: var(--storm); }
+.location-text p { font-size: .875rem; line-height: 1.65; color: var(--text-med); margin: 0; }
+.location-text a { color: var(--lagoon); font-weight: 600; }
+
+@media (min-width: 768px) {
+  #location { padding: var(--sp-3xl) 0; }
+  .location-header { margin-bottom: var(--sp-xxl); }
+  .location-grid { grid-template-columns: 1fr 1fr; gap: var(--sp-xl); }
+  .location-map { min-height: 420px; }
+}
+
+/* ══════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════ */
+#footer { position: relative; padding: var(--sp-xl) 0 var(--sp-md); background: var(--storm); color: white; }
+
+.footer-grid {
+  display: grid; grid-template-columns: 1fr; gap: var(--sp-lg); margin-bottom: var(--sp-lg);
+}
+
+.footer-brand h3 {
+  font-size: 1.3rem; font-weight: 700; margin-bottom: var(--sp-sm);
+  font-family: 'Fraunces', serif;
+}
+
+.footer-brand h3 strong {
+  background: linear-gradient(135deg, var(--arctic), var(--lagoon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.footer-brand p { font-size: .875rem; line-height: 1.7; color: rgba(255, 255, 255, 0.6); margin-bottom: var(--sp-md); max-width: 320px; }
+
+.footer-social { display: flex; gap: var(--sp-xs); flex-wrap: wrap; }
+
+.footer-social a {
+  width: 40px; height: 40px; border-radius: var(--r);
+  background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex; align-items: center; justify-content: center; transition: all 0.25s;
+}
+
+.footer-social a i { width: 18px; height: 18px; color: white; }
+
+.footer-social a:hover {
+  background: var(--lagoon); border-color: var(--lagoon);
+  transform: translateY(-3px); box-shadow: 0 6px 20px rgba(23, 140, 122, 0.4);
+}
+
+.footer-links h4 {
+  font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--arctic); margin-bottom: var(--sp-sm);
+}
+
+.footer-links ul { list-style: none; padding: 0; margin: 0; }
+.footer-links li { margin-bottom: 8px; }
+.footer-links a { font-size: .875rem; color: rgba(255, 255, 255, 0.6); transition: color 0.25s; }
+.footer-links a:hover { color: var(--arctic); }
+
+.footer-bottom {
+  padding-top: var(--sp-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex; flex-direction: column; gap: var(--sp-xs);
+  text-align: center; font-size: .8125rem; color: rgba(255, 255, 255, 0.48);
+}
+
+.footer-bottom a { color: var(--arctic); font-weight: 600; }
+
+@media (min-width: 768px) {
+  #footer { padding: var(--sp-xxl) 0 var(--sp-xl); }
+  .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--sp-xxl); }
+  .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+}
+
+/* ══════════════════════════════════════════════════
+   WHATSAPP FLOATING BUTTON
+══════════════════════════════════════════════════ */
+#whatsapp-btn {
+  position: fixed; bottom: 24px; right: 24px; z-index: 998;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 24px rgba(37, 211, 102, 0.5);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-decoration: none;
+}
+
+#whatsapp-btn:hover { transform: scale(1.15); box-shadow: 0 8px 36px rgba(37, 211, 102, 0.65); }
+
+#whatsapp-btn svg { width: 30px; height: 30px; fill: white; }
+
+#whatsapp-btn::before {
+  content: 'Chat with us';
+  position: absolute; right: 66px; top: 50%; transform: translateY(-50%);
+  background: #128C7E; color: white;
+  font-size: .75rem; font-weight: 700; white-space: nowrap;
+  padding: 7px 13px; border-radius: var(--r);
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 3px 14px rgba(37, 211, 102, 0.35);
+}
+
+#whatsapp-btn:hover::before { opacity: 1; }
+
+/* ══════════════════════════════════════════════════
+   MOBILE OPTIMISATIONS
+══════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  :root {
+    --pad-x: 18px;
+    --sp-xxl: 44px;
+    --sp-3xl: 56px;
+  }
+
+  #hero {
+    min-height: auto;
+    padding-top: calc(66px + var(--sp-xl));
+    padding-bottom: var(--sp-xl);
+  }
+
+  .hero-proof { font-size: .75rem; gap: 10px; }
+
+  .course-card { padding: 20px; }
+
+  .demo-form { padding: var(--sp-md); }
+
+  .stats-grid { gap: var(--sp-md); }
+
+  .about-stat-cards { max-width: 300px; gap: 10px; }
+
+  .about-stat-card { padding: 12px 10px; }
+  .about-stat-card .num { font-size: 1.5rem; }
+
+  .testimonial-card { padding: var(--sp-md); }
+
+  .location-item { padding: 14px; }
+
+  #whatsapp-btn { bottom: 16px; right: 16px; width: 52px; height: 52px; }
+
+  .section-title { letter-spacing: -.025em; }
+}
+
+@media (max-width: 360px) {
+  :root { --pad-x: 14px; }
+  .hero-title { font-size: 2.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ldr-logo">
+    <span>M</span><span>J</span>
+    <span>&nbsp;</span>
+    <span>S</span><span>P</span><span>O</span><span>K</span><span>E</span><span>N</span>
+  </div>
+  <div class="ldr-num">0</div>
+  <div class="ldr-bar-wrap"><div class="ldr-bar"></div></div>
+  <div class="ldr-label">Loading Experience</div>
+</div>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <div class="nav-logo"><strong>MJ</strong> Spoken English</div>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#demo">Contact</a></li>
+  </ul>
+  <a href="#demo" class="nav-cta">Book Free Demo</a>
+  <div class="nav-burger" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div id="mob-nav">
+  <button id="mob-close" onclick="toggleMob()">✕</button>
+  <a href="#hero" onclick="toggleMob()">Home</a>
+  <a href="#about" onclick="toggleMob()">About</a>
+  <a href="#courses" onclick="toggleMob()">Courses</a>
+  <a href="#testimonials" onclick="toggleMob()">Reviews</a>
+  <a href="#demo" onclick="toggleMob()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+  <div class="hero-content">
+    <span class="hero-tag">
+      <i data-lucide="award" style="width: 14px; height: 14px;"></i>
+      Ghaziabad's Premier Institute
+    </span>
+    <h1 class="hero-title">
+      Master English.<br>
+      <em>Unlock Opportunities.</em>
+    </h1>
+    <p class="hero-desc">
+      Professional training that transforms your communication and accelerates your career. Join 1,000+ confident speakers from Ghaziabad.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn-primary mag-btn" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+        <i data-lucide="calendar" style="width: 18px; height: 18px;"></i>
+        Book Free Demo
+      </button>
+      <button class="btn-secondary" onclick="document.getElementById('courses').scrollIntoView({behavior:'smooth'})">
+        Explore Courses
+        <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+      </button>
+    </div>
+    <div class="hero-proof">
+      <div class="hero-proof-avatars">
+        <span>RS</span><span>PK</span><span>AV</span><span>+</span>
+      </div>
+      <div class="hero-proof-stars">★★★★★</div>
+      <span class="hero-proof-sep"></span>
+      <span>1,000+ students transformed</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <span class="tag">Who We Are</span>
+        <h2>Empowering <em>Communication</em> Since 2018</h2>
+        <p>
+          MJ Spoken English is Ghaziabad's most trusted institute for professional English training.
+          We've helped 1,000+ students achieve fluency and meaningful career advancement.
+        </p>
+        <p>
+          Our methodology combines conversation practice, grammar mastery, and real-world scenarios
+          to build genuine confidence that lasts a lifetime.
+        </p>
+        <div class="about-highlights">
+          <div class="highlight-item">
+            <h4>
+              <i data-lucide="user-check" class="icon"></i>
+              Expert Faculty
+            </h4>
+            <p>Certified trainers with 8+ years of teaching experience</p>
+          </div>
+          <div class="highlight-item">
+            <h4>
+              <i data-lucide="trending-up" class="icon"></i>
+              Proven Results
+            </h4>
+            <p>95% of students report measurable career growth</p>
+          </div>
+          <div class="highlight-item">
+            <h4>
+              <i data-lucide="clock" class="icon"></i>
+              Flexible Batches
+            </h4>
+            <p>Morning, evening &amp; weekend batches available</p>
+          </div>
+          <div class="highlight-item">
+            <h4>
+              <i data-lucide="shield-check" class="icon"></i>
+              Structured Curriculum
+            </h4>
+            <p>Clear milestones with guaranteed progress tracking</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-stat-cards">
+          <div class="about-stat-card">
+            <span class="num">1000+</span>
+            <div class="lbl">Students Trained</div>
+          </div>
+          <div class="about-stat-card">
+            <span class="num">95%</span>
+            <div class="lbl">Success Rate</div>
+          </div>
+          <div class="about-stat-card">
+            <span class="num">8+</span>
+            <div class="lbl">Years Experience</div>
+          </div>
+          <div class="about-stat-card">
+            <span class="num">15+</span>
+            <div class="lbl">Expert Trainers</div>
+          </div>
+        </div>
+        <div class="about-badge">
+          <i data-lucide="award" style="width: 20px; height: 20px;"></i>
+          Ghaziabad's Top Rated Institute
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- COURSES -->
+<section id="courses">
+  <div class="container">
+    <div class="courses-header">
+      <span class="tag">Our Programs</span>
+      <h2 class="section-title">Courses for <em>Every Level</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">
+        From complete beginners to working professionals — find the right program and start speaking confidently.
+      </p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card">
+        <span class="course-level">Beginner</span>
+        <div class="course-icon"><i data-lucide="book-open"></i></div>
+        <h3>Foundation</h3>
+        <div class="course-duration"><i data-lucide="clock" style="width:14px;height:14px;"></i> 3 Months</div>
+        <p>Build core grammar fundamentals and everyday conversation skills from scratch.</p>
+        <ul class="course-features">
+          <li>Basic grammar &amp; vocabulary</li>
+          <li>Pronunciation training</li>
+          <li>Simple conversations</li>
+          <li>Daily practice exercises</li>
+        </ul>
+      </div>
+
+      <div class="course-card">
+        <span class="course-level">Intermediate</span>
+        <div class="course-icon"><i data-lucide="briefcase"></i></div>
+        <h3>Professional</h3>
+        <div class="course-duration"><i data-lucide="clock" style="width:14px;height:14px;"></i> 4 Months</div>
+        <p>Advance your career with business English and workplace communication skills.</p>
+        <ul class="course-features">
+          <li>Business communication</li>
+          <li>Presentation skills</li>
+          <li>Email &amp; report writing</li>
+          <li>Client interaction</li>
+        </ul>
+      </div>
+
+      <div class="course-card">
+        <span class="course-level">Advanced</span>
+        <div class="course-icon"><i data-lucide="target"></i></div>
+        <h3>Advanced</h3>
+        <div class="course-duration"><i data-lucide="clock" style="width:14px;height:14px;"></i> 6 Months</div>
+        <p>Master debates, public speaking, and advanced fluency techniques.</p>
+        <ul class="course-features">
+          <li>Advanced grammar mastery</li>
+          <li>Public speaking</li>
+          <li>Group discussions &amp; debates</li>
+          <li>Leadership communication</li>
+        </ul>
+      </div>
+
+      <div class="course-card">
+        <span class="course-level">Specialized</span>
+        <div class="course-icon"><i data-lucide="user-check"></i></div>
+        <h3>Interview Prep</h3>
+        <div class="course-duration"><i data-lucide="clock" style="width:14px;height:14px;"></i> 2 Months</div>
+        <p>Get job-ready with real mock interviews and personalized confidence coaching.</p>
+        <ul class="course-features">
+          <li>Mock interviews</li>
+          <li>Resume &amp; profile building</li>
+          <li>Confidence training</li>
+          <li>HR &amp; technical rounds</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ACTIVITIES -->
+<section id="activities">
+  <div class="container">
+    <div class="activities-header">
+      <span class="tag">What Makes Us Different</span>
+      <h2 class="section-title">Beyond <em>Classroom Learning</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">Immersive activities that make learning English engaging, practical, and fun.</p>
+    </div>
+    <div class="activities-grid">
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="mic"></i></div>
+        <h4>Group Discussions</h4>
+        <p>Weekly debates and discussions to build speaking confidence and critical thinking</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="library"></i></div>
+        <h4>Library Access</h4>
+        <p>Curated English reading resources and reference materials for self-study</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="users"></i></div>
+        <h4>Role-Play Sessions</h4>
+        <p>Practice real-life workplace and social scenarios with fellow students</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="film"></i></div>
+        <h4>Movie Screenings</h4>
+        <p>Learn natural English through cinema — accents, idioms, and tone</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="trophy"></i></div>
+        <h4>Competitions</h4>
+        <p>Monthly speaking contests to recognize and celebrate student progress</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon"><i data-lucide="pen-tool"></i></div>
+        <h4>Writing Workshops</h4>
+        <p>Professional writing sessions for emails, essays, and business reports</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="users"></i></div>
+        <span class="stat-number" data-count="1000">0</span>
+        <div class="stat-label">Students Trained</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="calendar"></i></div>
+        <span class="stat-number" data-count="8">0</span>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+        <span class="stat-number" data-count="95">0</span>
+        <div class="stat-label">Success Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i data-lucide="award"></i></div>
+        <span class="stat-number" data-count="15">0</span>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="testimonials-header">
+      <span class="tag">
+        <i data-lucide="message-circle" style="width: 14px; height: 14px;"></i>
+        Success Stories
+      </span>
+      <h2 class="section-title">What <em>Students Say</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">Real results from real people who transformed their careers with MJ.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">
+          "MJ Spoken English transformed my confidence completely. I went from a hesitant speaker to leading presentations at work. The teaching here is truly exceptional."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">RS</div>
+          <div class="author-info">
+            <h5>Rahul Sharma</h5>
+            <p>Software Engineer, TCS</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">
+          "Within just 4 months I cracked my dream job interview. The practical approach and personalized attention from the trainers made all the difference."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">PK</div>
+          <div class="author-info">
+            <h5>Priya Kapoor</h5>
+            <p>HR Manager, Wipro</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-text">
+          "I now confidently communicate with international clients every day. The group activities and role-play exercises were incredibly helpful in building fluency."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">AV</div>
+          <div class="author-info">
+            <h5>Amit Verma</h5>
+            <p>Business Owner</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="container">
+    <div class="demo-header">
+      <span class="tag">Get Started Today</span>
+      <h2 class="section-title">Book Your <em>Free Demo</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">No commitment needed — experience our teaching style completely free for 60 minutes.</p>
+    </div>
+    <div class="demo-grid">
+      <div class="demo-info">
+        <h3>Experience Our Teaching, Absolutely Free</h3>
+        <p>
+          Join us for a complimentary demo class. See exactly how our proven approach transforms communication skills — no strings attached.
+        </p>
+        <ul class="demo-features">
+          <li>60-minute interactive demo session</li>
+          <li>Personalized skill assessment</li>
+          <li>Custom course recommendation</li>
+          <li>Meet our expert trainers</li>
+          <li>Live Q&amp;A with current students</li>
+        </ul>
+      </div>
+      <div class="demo-form">
+        <form onsubmit="handleForm(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" required placeholder="Enter your full name">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" required placeholder="+91 00000 00000">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Preferred Course</label>
+            <select required>
+              <option value="">Select a course</option>
+              <option value="foundation">Foundation Course</option>
+              <option value="professional">Professional Course</option>
+              <option value="advanced">Advanced Fluency</option>
+              <option value="interview">Interview Preparation</option>
+              <option value="personality">Personality Development</option>
+              <option value="speaking">Public Speaking</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message (Optional)</label>
+            <textarea placeholder="Tell us about your goals and current English level..."></textarea>
+          </div>
+          <button type="submit" id="form-btn" class="btn-primary mag-btn">
+            <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+            Book My Free Demo
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="container">
+    <div class="location-header">
+      <span class="tag">Visit Us</span>
+      <h2 class="section-title">Find Us in <em>Ghaziabad</em></h2>
+      <p class="section-desc" style="margin: 0 auto;">Conveniently located in Vaishali — easy to reach from all parts of Ghaziabad.</p>
+    </div>
+    <div class="location-grid">
+      <div class="location-map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224346.48129763!2d77.2090212!3d28.6139391!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1234567890"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div class="location-details">
+        <div class="location-item">
+          <div class="location-icon"><i data-lucide="map-pin"></i></div>
+          <div class="location-text">
+            <h4>Address</h4>
+            <p>123 Main Market, Vaishali Sector 4<br>Ghaziabad, UP 201010</p>
+          </div>
+        </div>
+        <div class="location-item">
+          <div class="location-icon"><i data-lucide="clock"></i></div>
+          <div class="location-text">
+            <h4>Timings</h4>
+            <p>Mon–Sat: 7:00 AM – 8:00 PM<br>Sunday: 9:00 AM – 2:00 PM</p>
+          </div>
+        </div>
+        <div class="location-item">
+          <div class="location-icon"><i data-lucide="phone"></i></div>
+          <div class="location-text">
+            <h4>Phone</h4>
+            <p>+91 98765 43210<br>+91 98765 43211</p>
+          </div>
+        </div>
+        <div class="location-item">
+          <div class="location-icon"><i data-lucide="mail"></i></div>
+          <div class="location-text">
+            <h4>Email</h4>
+            <p><a href="mailto:info@mjspokenenglish.com">info@mjspokenenglish.com</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3><strong>MJ</strong> Spoken English</h3>
+        <p>Transforming lives through confident communication since 2018. Join Ghaziabad's most trusted English institute.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+          <a href="mailto:info@mjspokenenglish.com" aria-label="Email"><i data-lucide="mail"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+          <li><a href="#demo">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Courses</h4>
+        <ul>
+          <li><a href="#courses">Foundation</a></li>
+          <li><a href="#courses">Professional</a></li>
+          <li><a href="#courses">Advanced</a></li>
+          <li><a href="#courses">Interview Prep</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Study Materials</a></li>
+          <li><a href="#">Success Stories</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 MJ Spoken English. All rights reserved.</p>
+      <p>Crafted by <a href="https://github.com/satyam-64136" target="_blank">Satyam</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOATING BUTTON -->
+<a id="whatsapp-btn" href="https://wa.me/919876543210" target="_blank" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- SCRIPTS -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+lucide.createIcons();
+
+/* ── LOADER ── */
+window.addEventListener('load', () => {
+  const num = document.querySelector('.ldr-num');
+  const bar = document.querySelector('.ldr-bar');
+
+  gsap.to('.ldr-logo span', { y: 0, opacity: 1, stagger: .05, duration: .6, ease: 'power3.out' });
+  gsap.to(num, { opacity: 1, duration: .4, delay: .3 });
+
+  let count = 0;
+  const interval = setInterval(() => {
+    count += Math.floor(Math.random() * 15) + 5;
+    if (count >= 100) {
+      count = 100;
+      clearInterval(interval);
+      setTimeout(() => {
+        gsap.to('#loader', {
+          opacity: 0, duration: .8, ease: 'power2.inOut',
+          onComplete: () => {
+            document.getElementById('loader').style.display = 'none';
+            initAnimations();
+          }
+        });
+      }, 400);
+    }
+    num.textContent = count;
+    bar.style.width = count + '%';
+  }, 80);
+});
+
+/* ── ANIMATIONS ── */
+function initAnimations() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.from('.hero-tag',     { y: 30, opacity: 0, duration: .9,  ease: 'expo.out',   delay: .2 });
+  gsap.from('.hero-title',   { y: 50, opacity: 0, duration: 1.1, ease: 'expo.out',   delay: .4 });
+  gsap.from('.hero-desc',    { y: 30, opacity: 0, duration: .9,  ease: 'power3.out', delay: .6 });
+  gsap.from('.hero-buttons > *', { y: 30, opacity: 0, duration: .8, stagger: .15, ease: 'power3.out', delay: .8 });
+  gsap.from('.hero-proof',   { y: 20, opacity: 0, duration: .7,  ease: 'power3.out', delay: 1.1 });
+
+  gsap.from('.about-text', { x: -50, opacity: 0, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#about', start: 'top 70%', once: true }
+  });
+
+  gsap.from('.about-visual', { x: 50, opacity: 0, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '#about', start: 'top 70%', once: true }
+  });
+
+  gsap.from('.highlight-item', { y: 40, opacity: 0, duration: .8, stagger: .15, ease: 'power3.out',
+    scrollTrigger: { trigger: '.about-highlights', start: 'top 80%', once: true }
+  });
+
+  gsap.from('.about-stat-card', { y: 30, opacity: 0, duration: .6, stagger: .1, ease: 'back.out(1.7)',
+    scrollTrigger: { trigger: '.about-visual', start: 'top 75%', once: true }
+  });
+
+  gsap.from('.about-badge', { y: 20, opacity: 0, duration: .7, ease: 'power3.out', delay: .4,
+    scrollTrigger: { trigger: '.about-visual', start: 'top 75%', once: true }
+  });
+
+  gsap.from('.course-card', { y: 60, opacity: 0, scale: 0.95, duration: .8, stagger: .12, ease: 'expo.out',
+    scrollTrigger: { trigger: '.courses-grid', start: 'top 75%', once: true }
+  });
+
+  gsap.from('.activity-card', { y: 40, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out',
+    scrollTrigger: { trigger: '.activities-grid', start: 'top 75%', once: true }
+  });
+
+  /* Stats counter */
+  document.querySelectorAll('[data-count]').forEach(stat => {
+    const target = parseInt(stat.dataset.count);
+    ScrollTrigger.create({
+      trigger: stat, start: 'top 80%', once: true,
+      onEnter: () => {
+        gsap.from(stat.parentElement, { scale: 0.8, opacity: 0, duration: .6, ease: 'back.out(1.7)' });
+        let current = 0;
+        const inc = target / 50;
+        const timer = setInterval(() => {
+          current += inc;
+          if (current >= target) {
+            stat.textContent = target >= 1000 ? '1000+' : target + (target < 100 ? '%' : '+');
+            clearInterval(timer);
+          } else {
+            stat.textContent = Math.floor(current);
+          }
+        }, 30);
+      }
+    });
+  });
+
+  gsap.from('.testimonial-card', { x: -40, opacity: 0, duration: .9, stagger: .12, ease: 'power3.out',
+    scrollTrigger: { trigger: '.testimonials-grid', start: 'top 75%', once: true }
+  });
+
+  gsap.from('.demo-info', { x: -40, opacity: 0, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.demo-grid', start: 'top 70%', once: true }
+  });
+
+  gsap.from('.demo-form', { x: 40, opacity: 0, duration: 1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.demo-grid', start: 'top 70%', once: true }
+  });
+
+  gsap.from('.location-map', { opacity: 0, scale: 0.95, duration: .8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#location', start: 'top 70%', once: true }
+  });
+
+  gsap.from('.location-item', { x: 30, opacity: 0, duration: .7, stagger: .1, ease: 'power3.out',
+    scrollTrigger: { trigger: '.location-details', start: 'top 80%', once: true }
+  });
+}
+
+/* ── MAGNETIC BUTTONS ── */
+if (window.innerWidth > 768) {
+  document.querySelectorAll('.mag-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      gsap.to(btn, { x: x * 0.25, y: y * 0.25, duration: .4, ease: 'power2.out' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1, 0.5)' });
+    });
+  });
+}
+
+/* ── NAVIGATION ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('stuck', window.scrollY > 80);
+
+  const scrollY = window.scrollY + 200;
+  document.querySelectorAll('section[id]').forEach(section => {
+    const id = section.getAttribute('id');
+    if (scrollY >= section.offsetTop && scrollY < section.offsetTop + section.offsetHeight) {
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+});
+
+/* ── MOBILE NAV ── */
+let mobOpen = false;
+function toggleMob() {
+  mobOpen = !mobOpen;
+  document.getElementById('mob-nav').classList.toggle('open', mobOpen);
+  document.body.style.overflow = mobOpen ? 'hidden' : '';
+}
+
+/* ── FORM HANDLER ── */
+function handleForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-btn');
+  const original = btn.innerHTML;
+
+  btn.innerHTML = '✅ Request Received — We\'ll Call You Soon!';
+  btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  btn.style.boxShadow = '0 6px 24px rgba(16, 185, 129, 0.4)';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerHTML = original;
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+    btn.disabled = false;
+    lucide.createIcons();
+  }, 5000);
+}
+</script>
+
+</body>
+</html>
