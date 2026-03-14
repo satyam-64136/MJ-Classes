@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJ Spoken English — Speak With Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<!-- Fallback fonts if variable fonts unavailable -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,100;0,300;0,700;0,900;1,100;1,300;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════════════════════ */
+:root {
+  --black: #06070a;
+  --dark:  #0c0d12;
+  --dark2: #111218;
+  --panel: #14151c;
+  --gold:  #c8922a;
+  --goldb: #e8b84b;
+  --goldd: #7a5210;
+  --white: #f5f0e8;
+  --mist:  rgba(245,240,232,0.06);
+  --mist2: rgba(245,240,232,0.03);
+  --line:  rgba(245,240,232,0.07);
+  --r: 20px;
+  --rl: 32px;
+  --rx: 48px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+img, video { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { cursor: none; border: none; background: none; font-family: inherit; }
+
+/* ══════════════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════════════ */
+#cursor-dot {
+  position: fixed; z-index: 9999;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--goldb);
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width .3s, height .3s, background .3s;
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed; z-index: 9998;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(200,146,42,.5);
+  pointer-events: none;
+  transform: translate(-50%,-50%);
+  transition: width .4s cubic-bezier(.23,1,.32,1),
+              height .4s cubic-bezier(.23,1,.32,1),
+              opacity .3s;
+}
+body.hovering #cursor-dot { width: 16px; height: 16px; }
+body.hovering #cursor-ring { width: 64px; height: 64px; opacity: .4; }
+
+/* ══════════════════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════════════════ */
+#loader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--black);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 40px;
+}
+.ldr-logo {
+  overflow: hidden;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 100; letter-spacing: .3em;
+  color: var(--white); text-transform: uppercase;
+}
+.ldr-logo span { display: inline-block; opacity: 0; transform: translateY(100%); }
+.ldr-num {
+  font-family: 'Fraunces', serif; font-size: 5rem; font-weight: 100;
+  color: var(--gold); line-height: 1;
+  opacity: 0;
+}
+.ldr-bar-wrap {
+  width: 280px; height: 1px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+}
+.ldr-bar {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--goldd), var(--goldb));
+}
+.ldr-label {
+  font-size: .7rem; letter-spacing: .25em; text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+}
+
+/* ══════════════════════════════════════════════════════
+   THREE.JS CANVAS
+══════════════════════════════════════════════════════ */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; opacity: .7;
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 28px 6%;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: padding .5s;
+}
+#nav::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(6,7,10,0);
+  backdrop-filter: blur(0);
+  transition: background .5s, backdrop-filter .5s;
+  pointer-events: none;
+}
+#nav.stuck { padding: 18px 6%; }
+#nav.stuck::before {
+  background: rgba(6,7,10,.85);
+  backdrop-filter: blur(24px);
+}
+.nav-logo {
+  position: relative; z-index: 1;
+  font-family: 'Fraunces', serif; font-weight: 100;
+  font-size: 1.15rem; letter-spacing: .08em; color: var(--white);
+}
+.nav-logo strong {
+  font-weight: 700; font-style: italic;
+  color: var(--goldb);
+}
+.nav-links {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 36px; list-style: none;
+}
+.nav-links a {
+  font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.45); font-weight: 500;
+  transition: color .3s;
+}
+.nav-links a:hover { color: var(--goldb); }
+.nav-cta {
+  position: relative; z-index: 1;
+  padding: 11px 28px; border-radius: 99px;
+  background: var(--gold); color: var(--black);
+  font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  transition: box-shadow .4s, transform .3s;
+  overflow: hidden;
+}
+.nav-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.2), transparent);
+}
+.nav-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(200,146,42,.5);
+}
+.nav-burger {
+  display: none; z-index: 1; flex-direction: column; gap: 5px;
+  cursor: none; padding: 4px;
+}
+.nav-burger span { width: 22px; height: 1px; background: rgba(255,255,255,.6); display: block; }
+
+/* ══════════════════════════════════════════════════════
+   SMOOTH SCROLL WRAPPER
+══════════════════════════════════════════════════════ */
+#smooth-wrapper { overflow: hidden; }
+#smooth-content { will-change: transform; }
+
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+#hero {
+  position: relative; z-index: 1;
+  height: 100vh; min-height: 600px;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+}
+.hero-noise {
+  position: absolute; inset: 0; z-index: 0; opacity: .03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+.hero-grad {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 60%, rgba(200,146,42,.13) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 75% 30%, rgba(200,146,42,.07) 0%, transparent 65%);
+}
+.hero-content { position: relative; z-index: 2; padding: 0 5%; }
+.hero-eyebrow {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  font-size: .7rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 44px;
+  overflow: hidden;
+}
+.hero-eyebrow-inner { display: flex; align-items: center; gap: 14px; transform: translateY(100%); }
+.hero-eyebrow::before,
+.hero-eyebrow::after { content: ''; width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+.hero-eyebrow::after { transform: scaleX(-1); }
+
+.hero-h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
+  font-weight: 100; line-height: .95;
+  letter-spacing: -.02em;
+  overflow: hidden;
+}
+.hero-h1-line { overflow: hidden; display: block; }
+.hero-h1-line span { display: block; transform: translateY(110%); }
+.hero-h1 em { font-style: italic; color: var(--goldb); }
+
+.hero-sub {
+  font-size: clamp(.95rem, 1.8vw, 1.15rem);
+  color: rgba(245,240,232,.4); font-weight: 300;
+  max-width: 500px; margin: 36px auto 52px;
+  line-height: 1.8; letter-spacing: .01em;
+  opacity: 0; transform: translateY(24px);
+}
+.hero-actions {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  opacity: 0; transform: translateY(24px);
+}
+.btn-primary {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  padding: 18px 44px; border-radius: 99px;
+  background: linear-gradient(135deg, var(--goldb), var(--gold));
+  color: var(--black); font-size: .82rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  overflow: hidden; transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.25), transparent);
+}
+.btn-primary:hover { transform: translateY(-3px); }
+.btn-primary-glow {
+  position: absolute; inset: -2px; border-radius: 99px; z-index: -1;
+  background: linear-gradient(135deg, var(--goldb), var(--gold));
+  filter: blur(18px); opacity: 0;
+  transition: opacity .4s;
+}
+.btn-primary:hover .btn-primary-glow { opacity: .7; }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 18px 40px; border-radius: 99px;
+  border: 1px solid rgba(245,240,232,.15);
+  background: rgba(245,240,232,.04); backdrop-filter: blur(10px);
+  font-size: .82rem; font-weight: 500; letter-spacing: .06em;
+  color: rgba(245,240,232,.65);
+  transition: all .35s;
+}
+.btn-secondary:hover { border-color: rgba(200,146,42,.4); color: var(--goldb); background: rgba(200,146,42,.06); }
+
+.hero-scroll-hint {
+  position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  opacity: 0;
+}
+.scroll-hint-label { font-size: .62rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.2); }
+.scroll-hint-line { width: 1px; height: 56px; background: linear-gradient(to bottom, var(--gold), transparent); animation: lineDown 1.8s ease-in-out infinite; }
+@keyframes lineDown { 0%{transform:scaleY(0);transform-origin:top;opacity:0} 50%{opacity:1;transform:scaleY(1)} 100%{transform-origin:bottom;transform:scaleY(0);opacity:0} }
+
+/* hero counter row */
+.hero-stats {
+  display: flex; align-items: center; justify-content: center; gap: 60px;
+  margin-top: 80px; padding-top: 60px;
+  border-top: 1px solid var(--line);
+  opacity: 0;
+}
+.hs-item { text-align: center; }
+.hs-num {
+  font-family: 'Fraunces', serif; font-size: 2.8rem; font-weight: 100;
+  color: var(--goldb); line-height: 1;
+}
+.hs-lbl { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.3); margin-top: 6px; }
+.hs-div { width: 1px; height: 40px; background: var(--line); }
+
+/* ══════════════════════════════════════════════════════
+   MARQUEE
+══════════════════════════════════════════════════════ */
+.marquee-section {
+  position: relative; z-index: 1;
+  padding: 28px 0; overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: rgba(200,146,42,.04);
+}
+.marquee-track {
+  display: flex; gap: 0;
+  white-space: nowrap; animation: marqueeScroll 20s linear infinite;
+}
+.marquee-track span {
+  display: inline-flex; align-items: center; gap: 24px; padding: 0 32px;
+  font-family: 'Fraunces', serif; font-size: .9rem; font-weight: 100;
+  letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,.25);
+}
+.marquee-track em { color: var(--gold); font-style: normal; font-size: .55rem; }
+@keyframes marqueeScroll { to { transform: translateX(-50%); } }
+
+/* ══════════════════════════════════════════════════════
+   ABOUT / STORY SECTION
+══════════════════════════════════════════════════════ */
+.about-section {
+  position: relative; z-index: 1;
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 140px 6%;
+}
+.about-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center;
+}
+.about-left .section-tag {
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 24px;
+  display: block; overflow: hidden;
+}
+.about-left .section-tag span { display: block; transform: translateX(-40px); opacity: 0; }
+.about-big {
+  font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 100; line-height: 1.05; letter-spacing: -.01em;
+  overflow: hidden;
+}
+.about-big .line { overflow: hidden; display: block; }
+.about-big .line span { display: block; transform: translateY(100%); }
+.about-big em { font-style: italic; color: var(--goldb); }
+.about-body {
+  margin-top: 36px; font-size: 1rem; font-weight: 300;
+  color: rgba(245,240,232,.45); line-height: 1.85;
+  opacity: 0; transform: translateY(24px);
+}
+.about-cta-row { margin-top: 44px; opacity: 0; transform: translateY(20px); }
+
+/* trainer card */
+.trainer-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--rx);
+  overflow: hidden; position: relative;
+  transform: translateX(60px); opacity: 0;
+}
+.trainer-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,184,75,.25), transparent);
+}
+.tp-top {
+  height: 300px; position: relative; overflow: hidden;
+  background: linear-gradient(160deg, #151821, #0c0e14);
+  display: flex; align-items: center; justify-content: center;
+}
+.tp-top::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+  background: linear-gradient(to bottom, transparent, var(--panel));
+}
+.tp-monogram {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: conic-gradient(from 180deg, rgba(200,146,42,.06), rgba(232,184,75,.15), rgba(200,146,42,.06));
+  border: 1px solid rgba(200,146,42,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 100;
+  color: var(--goldb);
+  box-shadow: 0 0 80px rgba(200,146,42,.18), inset 0 0 40px rgba(200,146,42,.04);
+  position: relative; z-index: 1;
+}
+.tp-body { padding: 32px 36px 40px; }
+.tp-name { font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 300; }
+.tp-role { font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
+.tp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.tp-chip {
+  padding: 6px 16px; border-radius: 99px; font-size: .73rem;
+  background: rgba(200,146,42,.08); border: 1px solid rgba(200,146,42,.18);
+  color: var(--gold); letter-spacing: .05em; font-weight: 500;
+}
+.about-float {
+  position: absolute; top: 48px; left: -36px;
+  background: var(--white); border-radius: 16px; padding: 20px 26px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.5);
+  min-width: 160px;
+}
+.af-num { font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 700; color: var(--black); line-height: 1; }
+.af-lbl { font-size: .72rem; color: rgba(0,0,0,.45); margin-top: 4px; font-weight: 500; }
+
+/* ══════════════════════════════════════════════════════
+   STACKED CARDS SECTION
+══════════════════════════════════════════════════════ */
+.stacked-section {
+  position: relative; z-index: 1;
+  padding: 0 6%;
+}
+.stacked-pin {
+  /* height set via JS */
+}
+.stacked-sticky {
+  position: sticky; top: 0; height: 100vh;
+  display: flex; align-items: center; overflow: hidden;
+}
+.stacked-header {
+  position: absolute; top: 14vh; left: 6%; z-index: 5;
+}
+.stacked-header .sh-tag {
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 16px; display: block;
+}
+.stacked-header h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 100; line-height: 1.1; color: var(--white);
+}
+.stacked-header h2 em { font-style: italic; color: var(--goldb); }
+.cards-stack {
+  position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+  width: min(480px, 46vw);
+}
+.stack-card {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--rl); padding: 44px;
+  transform-origin: bottom center;
+  will-change: transform;
+}
+.stack-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,146,42,.2), transparent);
+}
+.sc-num {
+  font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 100;
+  color: rgba(200,146,42,.12); line-height: 1; margin-bottom: 24px;
+}
+.sc-icon { font-size: 2rem; margin-bottom: 20px; }
+.sc-title {
+  font-family: 'Fraunces', serif; font-size: 1.55rem; font-weight: 300;
+  color: var(--white); margin-bottom: 14px; line-height: 1.2;
+}
+.sc-title em { font-style: italic; color: var(--goldb); }
+.sc-body { font-size: .87rem; color: rgba(245,240,232,.4); line-height: 1.7; margin-bottom: 28px; }
+.sc-feats { display: flex; flex-direction: column; gap: 10px; }
+.sc-feat {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .82rem; color: rgba(245,240,232,.5);
+}
+.sc-feat::before { content: '✦'; color: var(--gold); font-size: .55rem; flex-shrink: 0; }
+.sc-tag {
+  display: inline-block; margin-top: 28px; padding: 8px 20px;
+  border-radius: 99px; font-size: .75rem; font-weight: 600;
+  background: rgba(200,146,42,.1); border: 1px solid rgba(200,146,42,.2);
+  color: var(--gold); letter-spacing: .05em;
+}
+
+/* ══════════════════════════════════════════════════════
+   PARALLAX SECTION
+══════════════════════════════════════════════════════ */
+.parallax-section {
+  position: relative; z-index: 1; overflow: hidden;
+  height: 80vh; min-height: 500px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--dark2);
+}
+.parallax-bg {
+  position: absolute; inset: -20%; z-index: 0;
+  background: linear-gradient(160deg, #0e1018 0%, #151820 40%, #0b0c11 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.parallax-rings {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}
+.p-ring {
+  position: absolute; border-radius: 50%; border: 1px solid rgba(200,146,42,.06);
+  will-change: transform;
+}
+.p-ring:nth-child(1) { width: 300px; height: 300px; }
+.p-ring:nth-child(2) { width: 500px; height: 500px; border-color: rgba(200,146,42,.04); }
+.p-ring:nth-child(3) { width: 700px; height: 700px; border-color: rgba(200,146,42,.03); }
+.p-ring:nth-child(4) { width: 900px; height: 900px; border-color: rgba(200,146,42,.02); }
+.parallax-text {
+  position: relative; z-index: 2; text-align: center; padding: 0 5%;
+  will-change: transform;
+}
+.pt-quote {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 5.5vw, 5rem);
+  font-weight: 100; line-height: 1.15;
+  letter-spacing: -.01em; color: var(--white);
+}
+.pt-quote em { font-style: italic; color: var(--goldb); }
+.pt-attr { margin-top: 28px; font-size: .78rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,.25); }
+
+/* ══════════════════════════════════════════════════════
+   ACTIVITIES GRID
+══════════════════════════════════════════════════════ */
+.activities-section {
+  position: relative; z-index: 1;
+  padding: 140px 6%;
+  background: var(--dark);
+}
+.activities-inner { max-width: 1200px; margin: 0 auto; }
+.section-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 64px;
+}
+.sh-left .tag { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 16px; display: block; }
+.sh-left h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 100; line-height: 1.1;
+}
+.sh-left h2 em { font-style: italic; color: var(--goldb); }
+.sh-right { font-size: .9rem; color: rgba(245,240,232,.35); max-width: 300px; line-height: 1.7; text-align: right; }
+.act-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.act-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--rl); padding: 36px;
+  position: relative; overflow: hidden;
+  transition: border-color .4s, transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s;
+  cursor: none;
+}
+.act-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,146,42,0), transparent);
+  transition: background .4s;
+}
+.act-card:hover::before {
+  background: linear-gradient(90deg, transparent, rgba(200,146,42,.35), transparent);
+}
+.act-card:hover { border-color: rgba(200,146,42,.2); transform: translateY(-6px); box-shadow: 0 30px 70px rgba(0,0,0,.3); }
+.act-glow {
+  position: absolute; width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,146,42,.12), transparent);
+  top: -60px; right: -60px; opacity: 0; transition: opacity .4s;
+}
+.act-card:hover .act-glow { opacity: 1; }
+.act-icon { font-size: 2rem; margin-bottom: 22px; position: relative; z-index: 1; }
+.act-title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 300; color: var(--white); margin-bottom: 10px; position: relative; z-index: 1; }
+.act-desc { font-size: .82rem; color: rgba(245,240,232,.35); line-height: 1.65; position: relative; z-index: 1; }
+.act-mag {
+  display: inline-flex; align-items: center; gap: 7px;
+  margin-top: 22px; padding: 9px 20px; border-radius: 99px;
+  border: 1px solid rgba(245,240,232,.1);
+  font-size: .73rem; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(245,240,232,.35); position: relative; z-index: 1;
+  transition: all .3s; font-weight: 500;
+}
+.act-card:hover .act-mag { border-color: rgba(200,146,42,.3); color: var(--gold); }
+
+/* ══════════════════════════════════════════════════════
+   TESTIMONIAL HORIZONTAL SCROLL
+══════════════════════════════════════════════════════ */
+.testimonials-section {
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+.t-sticky {
+  position: sticky; top: 0; height: 100vh;
+  display: flex; align-items: center; overflow: hidden;
+}
+.t-track-outer { display: flex; align-items: center; padding: 0 8%; gap: 24px; will-change: transform; }
+.t-head-card {
+  min-width: 380px;
+  flex-shrink: 0; padding-right: 60px;
+}
+.t-head-card .tag { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; display: block; }
+.t-head-card h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 100; line-height: 1.1;
+}
+.t-head-card h2 em { font-style: italic; color: var(--goldb); }
+.t-card {
+  min-width: 380px; max-width: 380px; flex-shrink: 0;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--rl); padding: 44px;
+  position: relative; overflow: hidden;
+  transition: border-color .4s;
+}
+.t-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,146,42,.2), transparent);
+}
+.t-card:hover { border-color: rgba(200,146,42,.25); }
+.t-quote-mark {
+  font-family: 'Fraunces', serif; font-size: 6rem; line-height: .7;
+  color: rgba(200,146,42,.08); margin-bottom: 24px; display: block;
+  font-weight: 700;
+}
+.t-stars { color: var(--gold); font-size: .85rem; letter-spacing: 4px; margin-bottom: 20px; }
+.t-text { font-family: 'Fraunces', serif; font-size: 1.08rem; font-weight: 300; font-style: italic; color: rgba(245,240,232,.65); line-height: 1.75; margin-bottom: 32px; }
+.t-who { display: flex; align-items: center; gap: 14px; }
+.t-av {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--dark2), var(--panel));
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--gold);
+}
+.t-name { font-weight: 600; font-size: .88rem; }
+.t-role { font-size: .75rem; color: rgba(245,240,232,.35); margin-top: 2px; }
+
+/* ══════════════════════════════════════════════════════
+   STATS BAND
+══════════════════════════════════════════════════════ */
+.stats-section {
+  position: relative; z-index: 1;
+  padding: 120px 6%;
+  background: var(--dark2);
+}
+.stats-inner { max-width: 1200px; margin: 0 auto; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--line); border-radius: var(--rl); overflow: hidden;
+}
+.sg-item {
+  padding: 60px 40px; border-right: 1px solid var(--line);
+  position: relative; overflow: hidden; transition: background .4s;
+}
+.sg-item:last-child { border-right: none; }
+.sg-item:hover { background: rgba(200,146,42,.04); }
+.sg-item::after {
+  content: ''; position: absolute; top: 0; right: 0; width: 1px; height: 0;
+  background: var(--gold); transition: height .6s;
+}
+.sg-item:hover::after { height: 100%; }
+.sg-num {
+  font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 100;
+  background: linear-gradient(135deg, var(--goldb), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  line-height: 1;
+}
+.sg-lbl { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(245,240,232,.3); margin-top: 12px; }
+
+/* ══════════════════════════════════════════════════════
+   DEMO FORM SECTION
+══════════════════════════════════════════════════════ */
+.demo-section {
+  position: relative; z-index: 1;
+  padding: 160px 6%;
+  background: var(--dark);
+}
+.demo-inner { max-width: 1200px; margin: 0 auto; }
+.demo-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--rx);
+  overflow: hidden;
+}
+.demo-grid::before {
+  content: ''; display: none;
+}
+.demo-left { padding: 80px; position: relative; }
+.demo-left::after {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 1px;
+  background: var(--line);
+}
+.demo-left .tag { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 20px; display: block; }
+.demo-left h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 100; line-height: 1.1; margin-bottom: 14px;
+}
+.demo-left h2 em { font-style: italic; color: var(--goldb); }
+.demo-left p { font-size: .9rem; color: rgba(245,240,232,.35); line-height: 1.75; }
+.demo-perks { margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
+.dp { display: flex; align-items: flex-start; gap: 14px; }
+.dp-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0; margin-top: 6px;
+}
+.dp-text strong { font-size: .88rem; font-weight: 600; display: block; margin-bottom: 2px; }
+.dp-text span { font-size: .8rem; color: rgba(245,240,232,.35); }
+.demo-right { padding: 80px; }
+/* Form */
+.f-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.f-field { margin-bottom: 16px; }
+.f-field label {
+  display: block; font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(245,240,232,.3); font-weight: 600; margin-bottom: 10px;
+  transition: color .3s;
+}
+.f-field:focus-within label { color: var(--goldb); }
+.f-field input, .f-field select {
+  width: 100%; padding: 16px 20px;
+  background: rgba(245,240,232,.04);
+  border: 1px solid rgba(245,240,232,.08);
+  border-radius: 14px; color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: .9rem;
+  outline: none; transition: all .35s;
+  -webkit-appearance: none; appearance: none;
+}
+.f-field input::placeholder { color: rgba(245,240,232,.2); }
+.f-field input:focus, .f-field select:focus {
+  border-color: rgba(200,146,42,.45);
+  background: rgba(200,146,42,.05);
+  box-shadow: 0 0 0 3px rgba(200,146,42,.08);
+}
+.f-field select option { background: var(--panel); color: var(--white); }
+.f-submit {
+  width: 100%; padding: 18px; border-radius: 14px; margin-top: 8px;
+  background: linear-gradient(135deg, var(--goldb), var(--gold));
+  color: var(--black); font-size: .85rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  font-family: 'DM Sans', sans-serif;
+  position: relative; overflow: hidden; cursor: none;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1), box-shadow .4s;
+}
+.f-submit::before {
+  content: ''; position: absolute; top: -100%; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,.25), transparent);
+  transition: top .5s;
+}
+.f-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,146,42,.35); }
+.f-submit:hover::before { top: 0; }
+
+/* ══════════════════════════════════════════════════════
+   LOCATION
+══════════════════════════════════════════════════════ */
+.location-section {
+  position: relative; z-index: 1;
+  padding: 140px 6%;
+  background: var(--black);
+}
+.location-inner { max-width: 1200px; margin: 0 auto; }
+.loc-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px; margin-top: 64px; align-items: stretch; }
+.loc-info {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--rl); padding: 52px;
+}
+.loc-rows { display: flex; flex-direction: column; gap: 0; }
+.loc-row { display: flex; align-items: flex-start; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+.loc-row:last-of-type { border-bottom: none; }
+.loc-ico { font-size: 1.1rem; opacity: .5; margin-top: 2px; flex-shrink: 0; }
+.loc-txt strong { font-weight: 600; font-size: .88rem; display: block; margin-bottom: 4px; }
+.loc-txt span { font-size: .82rem; color: rgba(245,240,232,.35); line-height: 1.6; }
+.loc-txt a { color: rgba(245,240,232,.35); text-decoration: none; transition: color .3s; }
+.loc-txt a:hover { color: var(--goldb); }
+.loc-btns { display: flex; gap: 12px; margin-top: 36px; }
+.lb {
+  flex: 1; padding: 14px; border-radius: 12px; text-align: center;
+  font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  transition: all .35s; display: block;
+}
+.lb-call { background: var(--gold); color: var(--black); }
+.lb-call:hover { box-shadow: 0 8px 32px rgba(200,146,42,.4); transform: translateY(-2px); }
+.lb-wa { background: rgba(37,211,102,.1); border: 1px solid rgba(37,211,102,.2); color: #25d366; }
+.lb-wa:hover { background: rgba(37,211,102,.18); transform: translateY(-2px); }
+.map-wrap {
+  border-radius: var(--rl); overflow: hidden;
+  border: 1px solid var(--line); min-height: 400px;
+}
+.map-wrap iframe { width: 100%; height: 100%; min-height: 420px; border: none; display: block; }
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+footer {
+  position: relative; z-index: 1;
+  background: #020304;
+  padding: 90px 6% 40px;
+  border-top: 1px solid var(--line);
+}
+.foot-top {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 80px;
+  padding-bottom: 64px; border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.f-logo { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 100; }
+.f-logo strong { color: var(--goldb); font-style: italic; }
+.f-about { font-size: .83rem; color: rgba(245,240,232,.25); line-height: 1.75; margin: 18px 0 28px; max-width: 260px; }
+.f-socials { display: flex; gap: 10px; }
+.fsoc {
+  width: 38px; height: 38px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--mist2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; color: rgba(255,255,255,.4);
+  transition: all .3s;
+}
+.fsoc:hover { background: rgba(200,146,42,.1); border-color: rgba(200,146,42,.25); color: var(--gold); transform: translateY(-3px); }
+.f-col h5 { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 22px; font-weight: 700; }
+.f-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.f-col a { font-size: .84rem; color: rgba(245,240,232,.3); transition: color .3s, padding-left .3s; display: block; }
+.f-col a:hover { color: var(--goldb); padding-left: 6px; }
+.foot-bot {
+  max-width: 1200px; margin: 32px auto 0;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.foot-bot p { font-size: .73rem; color: rgba(255,255,255,.15); }
+
+/* ══════════════════════════════════════════════════════
+   FLOATING BUTTONS
+══════════════════════════════════════════════════════ */
+.float-btns {
+  position: fixed; bottom: 28px; right: 28px; z-index: 900;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.fb {
+  width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; text-decoration: none;
+  box-shadow: 0 8px 28px rgba(0,0,0,.4);
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+  border: 1px solid rgba(255,255,255,.06);
+}
+.fb-call { background: var(--panel); color: var(--white); }
+.fb-wa { background: #25d366; color: white; border-color: #25d366; }
+.fb:hover { transform: scale(1.16) translateY(-3px); }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE
+══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .about-inner { grid-template-columns: 1fr; gap: 60px; }
+  .act-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .demo-grid { grid-template-columns: 1fr; }
+  .demo-left::after { display: none; }
+  .loc-grid { grid-template-columns: 1fr; }
+  .foot-top { grid-template-columns: 1fr; gap: 40px; }
+  .about-float { display: none; }
+  .cards-stack { width: min(420px, 90vw); right: 5%; }
+}
+@media (max-width: 768px) {
+  #nav .nav-links { display: none; }
+  #nav .nav-cta { display: none; }
+  .nav-burger { display: flex; }
+  .act-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .f-grid { grid-template-columns: 1fr; }
+  .demo-left, .demo-right { padding: 48px 32px; }
+  .section-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+  .sh-right { text-align: left; }
+  .hero-stats { gap: 32px; flex-wrap: wrap; }
+  #cursor-dot, #cursor-ring { display: none; }
+  body { cursor: auto; }
+  button { cursor: pointer; }
+  .stacked-section { display: none; } /* hide complex scroll section on mobile */
+}
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .foot-top { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- THREE.JS CANVAS -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ldr-logo" id="ldr-logo">
+    <span>M</span><span>J</span>&nbsp;
+    <span>S</span><span>p</span><span>o</span><span>k</span><span>e</span><span>n</span>&nbsp;
+    <span>E</span><span>n</span><span>g</span><span>l</span><span>i</span><span>s</span><span>h</span>
+  </div>
+  <div class="ldr-num" id="ldr-num">0</div>
+  <div class="ldr-bar-wrap"><div class="ldr-bar" id="ldr-bar"></div></div>
+  <div class="ldr-label">Loading Experience</div>
+</div>
+
+<!-- FLOATING BUTTONS -->
+<div class="float-btns">
+  <a class="fb fb-call" href="tel:+918384081679" title="Call">📞</a>
+  <a class="fb fb-wa" href="https://wa.me/918384081679" target="_blank" title="WhatsApp">💬</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo"><strong>MJ</strong> Spoken English</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#demo">Contact</a></li>
+  </ul>
+  <a href="#demo" class="nav-cta">Book Demo</a>
+  <div class="nav-burger" onclick="toggleMob()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- SMOOTH SCROLL WRAPPER -->
+<div id="smooth-wrapper">
+<div id="smooth-content">
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-inner" id="hero-eyebrow">
+        <span>Raj Nagar Extension</span>
+        <span style="opacity:.4;font-size:.45rem">◆</span>
+        <span>Ghaziabad</span>
+        <span style="opacity:.4;font-size:.45rem">◆</span>
+        <span>Est. 2016</span>
+      </div>
+    </div>
+    <h1 class="hero-h1" id="hero-h1">
+      <span class="hero-h1-line"><span>Speak English</span></span>
+      <span class="hero-h1-line"><span>With <em>Confidence</em></span></span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">Transform your communication skills with expert training by Mansi Jain — Personality Development Trainer with 8+ years of proven impact.</p>
+    <div class="hero-actions" id="hero-actions">
+      <a href="#demo" class="btn-primary mag-btn">
+        <div class="btn-primary-glow"></div>
+        ✦ Book Free Demo
+      </a>
+      <a href="#courses" class="btn-secondary mag-btn">Explore Courses →</a>
+    </div>
+    <div class="hero-stats" id="hero-stats">
+      <div class="hs-item"><div class="hs-num" data-count="1000">0</div><div class="hs-lbl">Students Trained</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-num" data-count="8">0</div><div class="hs-lbl">Years Experience</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-num">4.9★</div><div class="hs-lbl">Student Rating</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-num">3</div><div class="hs-lbl">Core Programs</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint" id="hero-scroll">
+    <span class="scroll-hint-label">Scroll</span>
+    <div class="scroll-hint-line"></div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="marquee-section">
+  <div class="marquee-track" aria-hidden="true">
+    <span>Spoken English <em>◆</em></span>
+    <span>Public Speaking <em>◆</em></span>
+    <span>Confidence Building <em>◆</em></span>
+    <span>Accent Training <em>◆</em></span>
+    <span>Interview Prep <em>◆</em></span>
+    <span>Personality Development <em>◆</em></span>
+    <span>Communication Skills <em>◆</em></span>
+    <span>Spoken English <em>◆</em></span>
+    <span>Public Speaking <em>◆</em></span>
+    <span>Confidence Building <em>◆</em></span>
+    <span>Accent Training <em>◆</em></span>
+    <span>Interview Prep <em>◆</em></span>
+    <span>Personality Development <em>◆</em></span>
+    <span>Communication Skills <em>◆</em></span>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<section id="about" class="about-section">
+  <div class="about-inner">
+    <div class="about-left">
+      <span class="section-tag"><span id="about-tag">About</span></span>
+      <div class="about-big" id="about-head">
+        <span class="line"><span>The Art of</span></span>
+        <span class="line"><span><em>Confident</em></span></span>
+        <span class="line"><span>Communication</span></span>
+      </div>
+      <p class="about-body" id="about-body">MJ Spoken English Classes is a professional communication institute in Raj Nagar Extension, Ghaziabad led by expert trainer Mansi Jain. Our focus is building real confidence, polished pronunciation, and authentic communication skills through highly interactive and engaging activities.</p>
+      <div class="about-cta-row" id="about-cta">
+        <a href="#demo" class="btn-primary mag-btn">
+          <div class="btn-primary-glow"></div>
+          Book Free Demo
+        </a>
+      </div>
+    </div>
+    <div class="about-right" style="position:relative;">
+      <div class="trainer-panel" id="trainer-panel">
+        <div class="tp-top">
+          <div class="tp-monogram">MJ</div>
+        </div>
+        <div class="tp-body">
+          <div class="tp-name">Mansi Jain</div>
+          <div class="tp-role">Personality Development Trainer</div>
+          <div class="tp-chips">
+            <span class="tp-chip">PD Coach</span>
+            <span class="tp-chip">Public Speaking</span>
+            <span class="tp-chip">Accent Training</span>
+            <span class="tp-chip">Interview Prep</span>
+            <span class="tp-chip">8+ Years</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-float">
+        <div class="af-num">8+</div>
+        <div class="af-lbl">Years of<br>Excellence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STACKED CARDS (COURSES) ══ -->
+<section id="courses" class="stacked-section">
+  <div class="stacked-pin" id="stacked-pin">
+    <div class="stacked-sticky">
+      <div class="stacked-header" id="stacked-header">
+        <span class="sh-tag">Courses</span>
+        <h2>Our <em>Programs</em></h2>
+      </div>
+      <div class="cards-stack" id="cards-stack">
+        <div class="stack-card" id="card-0" style="z-index:3;">
+          <div class="sc-num">01</div>
+          <div class="sc-icon">📘</div>
+          <div class="sc-title">Basic <em>English</em> Course</div>
+          <div class="sc-body">Perfect starting point for beginners. Build strong foundations in grammar, vocabulary, and everyday conversation with structured, progressive lessons.</div>
+          <div class="sc-feats">
+            <div class="sc-feat">Grammar fundamentals</div>
+            <div class="sc-feat">Sentence formation</div>
+            <div class="sc-feat">Everyday conversation skills</div>
+          </div>
+          <a href="#demo" class="sc-tag">Enroll Now →</a>
+        </div>
+        <div class="stack-card" id="card-1" style="z-index:2;">
+          <div class="sc-num">02</div>
+          <div class="sc-icon">🎯</div>
+          <div class="sc-title">Communication <em>Skills</em></div>
+          <div class="sc-body">Build the confidence to speak fluently in public, at work, and in interviews. Develop your unique voice and command any room you walk into.</div>
+          <div class="sc-feats">
+            <div class="sc-feat">Public speaking mastery</div>
+            <div class="sc-feat">Confidence building exercises</div>
+            <div class="sc-feat">Mock interview practice</div>
+          </div>
+          <a href="#demo" class="sc-tag">Enroll Now →</a>
+        </div>
+        <div class="stack-card" id="card-2" style="z-index:1;">
+          <div class="sc-num">03</div>
+          <div class="sc-icon">🚀</div>
+          <div class="sc-title">Advanced <em>Spoken</em> English</div>
+          <div class="sc-body">Master professional communication, accent refinement and commanding presentation skills. Designed for those who want to truly excel in every environment.</div>
+          <div class="sc-feats">
+            <div class="sc-feat">Advanced accent training</div>
+            <div class="sc-feat">Professional communication</div>
+            <div class="sc-feat">Presentation mastery</div>
+          </div>
+          <a href="#demo" class="sc-tag">Enroll Now →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PARALLAX QUOTE ══ -->
+<div class="parallax-section" id="parallax-sec">
+  <div class="parallax-bg">
+    <div class="parallax-rings">
+      <div class="p-ring" id="pr1"></div>
+      <div class="p-ring" id="pr2"></div>
+      <div class="p-ring" id="pr3"></div>
+      <div class="p-ring" id="pr4"></div>
+    </div>
+  </div>
+  <div class="parallax-text" id="parallax-text">
+    <div class="pt-quote">"Language is the road map<br>of a culture. It tells you<br>where its people <em>came from</em><br>and where they are <em>going.</em>"</div>
+    <div class="pt-attr">— Mansi Jain, MJ Spoken English</div>
+  </div>
+</div>
+
+<!-- ══ ACTIVITIES ══ -->
+<section id="activities" class="activities-section">
+  <div class="activities-inner">
+    <div class="section-header">
+      <div class="sh-left">
+        <span class="tag">Class Activities</span>
+        <h2>Learn by <em>Doing</em></h2>
+      </div>
+      <p class="sh-right">Interactive, activity-based sessions that make learning feel natural and deeply effective.</p>
+    </div>
+    <div class="act-grid" id="act-grid">
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">💬</div>
+        <div class="act-title">Group Discussions</div>
+        <div class="act-desc">Structured debates and discussions that sharpen critical thinking and build natural fluency in real-time conversation.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">🎭</div>
+        <div class="act-title">Role Play Sessions</div>
+        <div class="act-desc">Immersive scenario-based exercises that simulate real-world situations from job interviews to professional presentations.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">📖</div>
+        <div class="act-title">Story Narration</div>
+        <div class="act-desc">Creative storytelling sessions that expand vocabulary, improve expression, and develop narrative communication skills.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">🎮</div>
+        <div class="act-title">Vocabulary Games</div>
+        <div class="act-desc">Engaging word games and challenges that make building vocabulary fun, memorable, and effortlessly effective.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">🎤</div>
+        <div class="act-title">Presentation Practice</div>
+        <div class="act-desc">Structured public speaking exercises that build stage presence, poise, and the authority to command any audience.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+      <div class="act-card" data-tilt>
+        <div class="act-glow"></div>
+        <div class="act-icon">🤝</div>
+        <div class="act-title">Conversation Practice</div>
+        <div class="act-desc">Daily paired and group conversation drills that build natural, instinctive fluency in real spoken English.</div>
+        <div class="act-mag mag-btn">Explore ↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="stats-grid" id="stats-grid">
+      <div class="sg-item">
+        <div class="sg-num" data-count="1000">0</div>
+        <div class="sg-lbl">Students Trained</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-num" data-count="8">0</div>
+        <div class="sg-lbl">Years of Excellence</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-num">4.9★</div>
+        <div class="sg-lbl">Average Rating</div>
+      </div>
+      <div class="sg-item">
+        <div class="sg-num">3</div>
+        <div class="sg-lbl">Core Programs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS HORIZONTAL ══ -->
+<section id="testimonials" class="testimonials-section">
+  <div style="height:300vh;" id="t-pin-wrapper">
+    <div class="t-sticky">
+      <div class="t-track-outer" id="t-track">
+        <div class="t-head-card">
+          <span class="tag">Testimonials</span>
+          <h2>Student <em>Stories</em></h2>
+        </div>
+        <div class="t-card">
+          <span class="t-quote-mark">"</span>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-text">Best place to learn spoken English. The teaching style is remarkably interactive and Mansi ma'am explains everything with such profound clarity. I feel genuinely transformed.</div>
+          <div class="t-who"><div class="t-av">P</div><div><div class="t-name">Priya Sharma</div><div class="t-role">Communication Skills</div></div></div>
+        </div>
+        <div class="t-card">
+          <span class="t-quote-mark">"</span>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-text">After joining this class my confidence improved dramatically. I used to be terrified of speaking in public — now I give presentations without any hesitation whatsoever.</div>
+          <div class="t-who"><div class="t-av">R</div><div><div class="t-name">Rahul Gupta</div><div class="t-role">Advanced Spoken English</div></div></div>
+        </div>
+        <div class="t-card">
+          <span class="t-quote-mark">"</span>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-text">Teacher clears doubts individually and encourages students every step of the way. The role plays and group discussions made me improve so much faster than I imagined possible.</div>
+          <div class="t-who"><div class="t-av">A</div><div><div class="t-name">Ankita Verma</div><div class="t-role">Basic English Course</div></div></div>
+        </div>
+        <div class="t-card">
+          <span class="t-quote-mark">"</span>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-text">MJ Spoken English completely changed how I communicate. I cracked my dream job interview directly because of the training I received here. I cannot recommend this enough.</div>
+          <div class="t-who"><div class="t-av">S</div><div><div class="t-name">Siddharth Mishra</div><div class="t-role">Interview Preparation</div></div></div>
+        </div>
+        <div class="t-card">
+          <span class="t-quote-mark">"</span>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-text">Mansi ma'am is an exceptional trainer. Her approach to personality development alongside English speaking is truly unique and extremely effective for navigating real life situations.</div>
+          <div class="t-who"><div class="t-av">N</div><div><div class="t-name">Nidhi Agarwal</div><div class="t-role">Communication Skills</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEMO FORM ══ -->
+<section id="demo" class="demo-section">
+  <div class="demo-inner">
+    <div class="demo-grid" id="demo-grid">
+      <div class="demo-left">
+        <span class="tag">Free Demo</span>
+        <h2>Book Your<br><em>Free Class</em></h2>
+        <p>Experience our teaching methodology before committing. Zero risk, full experience.</p>
+        <div class="demo-perks">
+          <div class="dp"><div class="dp-dot"></div><div class="dp-text"><strong>Live Class Experience</strong><span>See exactly how we teach before committing</span></div></div>
+          <div class="dp"><div class="dp-dot"></div><div class="dp-text"><strong>Meet Mansi Jain Personally</strong><span>Get to know your trainer one-on-one</span></div></div>
+          <div class="dp"><div class="dp-dot"></div><div class="dp-text"><strong>Absolutely No Obligation</strong><span>Free with zero pressure to enroll</span></div></div>
+          <div class="dp"><div class="dp-dot"></div><div class="dp-text"><strong>+91 83840 81679</strong><span>Mon – Sat · 9 AM to 7 PM</span></div></div>
+        </div>
+      </div>
+      <div class="demo-right">
+        <form onsubmit="handleForm(event)">
+          <div class="f-grid">
+            <div class="f-field"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+            <div class="f-field"><label>Phone</label><input type="tel" placeholder="+91 00000 00000" required></div>
+          </div>
+          <div class="f-field"><label>Email Address</label><input type="email" placeholder="you@example.com"></div>
+          <div class="f-field">
+            <label>Course Interest</label>
+            <select required>
+              <option value="" disabled selected>Select a course</option>
+              <option>Basic English Course</option>
+              <option>Communication Skills Course</option>
+              <option>Advanced Spoken English</option>
+              <option>Not sure — help me choose</option>
+            </select>
+          </div>
+          <button type="submit" class="f-submit" id="form-btn">Book My Free Demo ✦</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOCATION ══ -->
+<section id="location" class="location-section">
+  <div class="location-inner">
+    <span class="tag">Location</span>
+    <h2 style="font-family:'Fraunces',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:100;margin-top:12px;">Find <em style="font-style:italic;color:var(--goldb);">Us</em></h2>
+    <div class="loc-grid" id="loc-grid">
+      <div class="loc-info">
+        <div class="loc-rows">
+          <div class="loc-row"><span class="loc-ico">📍</span><div class="loc-txt"><strong>Address</strong><span>Plot No. 88, River Heights Rd,<br>Raj Nagar Extension,<br>Ghaziabad, Uttar Pradesh</span></div></div>
+          <div class="loc-row"><span class="loc-ico">📞</span><div class="loc-txt"><strong>Phone</strong><span><a href="tel:+918384081679">+91 83840 81679</a></span></div></div>
+          <div class="loc-row"><span class="loc-ico">💬</span><div class="loc-txt"><strong>WhatsApp</strong><span><a href="https://wa.me/918384081679" target="_blank">Chat on WhatsApp</a></span></div></div>
+          <div class="loc-row"><span class="loc-ico">🕐</span><div class="loc-txt"><strong>Timings</strong><span>Monday – Saturday · 9 AM to 7 PM</span></div></div>
+        </div>
+        <div class="loc-btns">
+          <a href="tel:+918384081679" class="lb lb-call">📞 Call Now</a>
+          <a href="https://wa.me/918384081679" target="_blank" class="lb lb-wa">💬 WhatsApp</a>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.12!2d77.4543!3d28.6921!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDQxJzMxLjYiTiA3N8KwMjcnMTUuNSJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen loading="lazy" title="MJ Spoken English Location"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <div class="f-logo"><strong>MJ</strong> Spoken English</div>
+      <p class="f-about">Building confident communicators in Raj Nagar Extension, Ghaziabad. Expert training by Mansi Jain — Personality Development Trainer with 8+ years of impact.</p>
+      <div class="f-socials">
+        <a href="#" class="fsoc" title="Instagram">📷</a>
+        <a href="#" class="fsoc" title="Facebook">👍</a>
+        <a href="#" class="fsoc" title="YouTube">▶</a>
+        <a href="https://wa.me/918384081679" class="fsoc" target="_blank" title="WhatsApp">💬</a>
+      </div>
+    </div>
+    <div class="f-col"><h5>Navigate</h5><ul><li><a href="#hero">Home</a></li><li><a href="#about">About</a></li><li><a href="#courses">Courses</a></li><li><a href="#activities">Activities</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#demo">Book Demo</a></li></ul></div>
+    <div class="f-col"><h5>Programs</h5><ul><li><a href="#courses">Basic English</a></li><li><a href="#courses">Communication Skills</a></li><li><a href="#courses">Advanced Spoken</a></li><li><a href="#demo">Free Demo Class</a></li></ul></div>
+  </div>
+  <div class="foot-bot">
+    <p>© 2024 MJ Spoken English Classes · Raj Nagar Extension, Ghaziabad</p>
+    <p>Crafted for confident communicators ✦</p>
+  </div>
+</footer>
+
+</div><!-- smooth-content -->
+</div><!-- smooth-wrapper -->
+
+<!-- MOBILE NAV -->
+<div id="mob-nav" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(6,7,10,.97);backdrop-filter:blur(40px);flex-direction:column;align-items:center;justify-content:center;gap:48px;">
+  <span onclick="toggleMob()" style="position:absolute;top:28px;right:28px;font-size:1.5rem;color:rgba(255,255,255,.4);cursor:pointer;">✕</span>
+  <a href="#about"        onclick="toggleMob()" style="font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:rgba(255,255,255,.7);">About</a>
+  <a href="#courses"      onclick="toggleMob()" style="font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:rgba(255,255,255,.7);">Courses</a>
+  <a href="#activities"   onclick="toggleMob()" style="font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:rgba(255,255,255,.7);">Activities</a>
+  <a href="#testimonials" onclick="toggleMob()" style="font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:rgba(255,255,255,.7);">Reviews</a>
+  <a href="#demo"         onclick="toggleMob()" style="font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:var(--goldb);">Book Demo</a>
+</div>
+
+<!-- LIBRARIES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   THREE.JS PARTICLES
+══════════════════════════════════════════════════════ */
+(function initThree() {
+  const canvas = document.getElementById('bg-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, .1, 1000);
+  camera.position.z = 4;
+
+  // Particles
+  const count = 1200;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    positions[i*3]   = (Math.random() - .5) * 14;
+    positions[i*3+1] = (Math.random() - .5) * 14;
+    positions[i*3+2] = (Math.random() - .5) * 10;
+    const r = .78 + Math.random() * .2, g = .57 + Math.random() * .1, b = .16 + Math.random() * .1;
+    colors[i*3] = r; colors[i*3+1] = g; colors[i*3+2] = b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({ size: .018, vertexColors: true, transparent: true, opacity: .6, sizeAttenuation: true });
+  const mesh = new THREE.Points(geo, mat);
+  scene.add(mesh);
+
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / window.innerWidth - .5) * .4;
+    my = -(e.clientY / window.innerHeight - .5) * .4;
+  });
+
+  let rafId;
+  function animate() {
+    rafId = requestAnimationFrame(animate);
+    mesh.rotation.y += .0008;
+    mesh.rotation.x += .0003;
+    camera.position.x += (mx - camera.position.x) * .04;
+    camera.position.y += (my - camera.position.y) * .04;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ══════════════════════════════════════════════════════
+   LENIS SMOOTH SCROLL (fallback: native smooth)
+══════════════════════════════════════════════════════ */
+// We implement a lightweight smooth scroll since Lenis CDN may vary
+class SmoothScroller {
+  constructor() {
+    this.current = 0; this.target = 0; this.ease = 0.1;
+    this.content = document.getElementById('smooth-content');
+    this.wrapper = document.getElementById('smooth-wrapper');
+    this.height = 0; this.raf = null;
+    this.init();
+  }
+  init() {
+    document.body.style.overflow = 'hidden';
+    this.wrapper.style.position = 'fixed';
+    this.wrapper.style.top = '0'; this.wrapper.style.left = '0';
+    this.wrapper.style.width = '100%'; this.wrapper.style.height = '100vh';
+    this.wrapper.style.overflow = 'hidden';
+    this.setHeight();
+    window.addEventListener('resize', () => this.setHeight());
+    window.addEventListener('wheel', e => { this.target = Math.max(0, Math.min(this.height - window.innerHeight, this.target + e.deltaY)); }, { passive: true });
+    window.addEventListener('touchstart', e => { this._touchY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchmove', e => {
+      const dy = this._touchY - e.touches[0].clientY;
+      this.target = Math.max(0, Math.min(this.height - window.innerHeight, this.target + dy));
+      this._touchY = e.touches[0].clientY;
+    }, { passive: true });
+    this.update();
+  }
+  setHeight() {
+    this.height = this.content.getBoundingClientRect().height;
+    document.body.style.height = this.height + 'px';
+  }
+  update() {
+    this.current += (this.target - this.current) * this.ease;
+    if (Math.abs(this.target - this.current) < 0.1) this.current = this.target;
+    this.content.style.transform = `translateY(${-this.current}px)`;
+    // Sync ScrollTrigger
+    if (window.ScrollTrigger) ScrollTrigger.update();
+    this._scrollY = this.current;
+    window.dispatchEvent(new CustomEvent('smoothscroll', { detail: { scrollY: this.current } }));
+    this.raf = requestAnimationFrame(() => this.update());
+  }
+  get scrollY() { return this.current; }
+}
+
+// Only enable smooth scroll on non-mobile
+let smoother;
+if (window.innerWidth > 768) {
+  smoother = new SmoothScroller();
+  // Patch ScrollTrigger to use smooth scroll position
+  ScrollTrigger.scrollerProxy(document.body, {
+    scrollTop(val) {
+      if (arguments.length && smoother) smoother.target = val;
+      return smoother ? smoother.current : window.scrollY;
+    },
+    getBoundingClientRect() {
+      return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+    },
+    pinType: document.getElementById('smooth-content').style.transform ? 'transform' : 'fixed'
+  });
+  ScrollTrigger.addEventListener('refresh', () => smoother && smoother.setHeight());
+}
+
+gsap.registerPlugin(ScrollTrigger);
+
+/* ══════════════════════════════════════════════════════
+   CURSOR
+══════════════════════════════════════════════════════ */
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let cx = -100, cy = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { cx = e.clientX; cy = e.clientY; dot.style.left = cx+'px'; dot.style.top = cy+'px'; });
+(function ringFollow() {
+  rx += (cx - rx) * .13; ry += (cy - ry) * .13;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(ringFollow);
+})();
+document.querySelectorAll('a,button,.act-card,.stack-card,.t-card,.mag-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
+
+/* ══════════════════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════════════════ */
+(function runLoader() {
+  const tl = gsap.timeline();
+  const chars = document.querySelectorAll('#ldr-logo span');
+  const num = document.getElementById('ldr-num');
+  const bar = document.getElementById('ldr-bar');
+
+  tl.to(chars, { opacity: 1, y: 0, duration: .06, stagger: .06, ease: 'power2.out' })
+    .to('#ldr-num', { opacity: 1, duration: .4 }, .8)
+    .to(bar, { width: '100%', duration: 1.4, ease: 'power2.inOut',
+      onUpdate() { num.textContent = Math.round(gsap.getProperty(bar, 'width') / 2.8) + '%'; }
+    }, .9)
+    .to('#loader', { opacity: 0, duration: .7, ease: 'power2.inOut',
+      onComplete() { document.getElementById('loader').style.display = 'none'; initAnimations(); }
+    }, '+=.2');
+})();
+
+/* ══════════════════════════════════════════════════════
+   MAIN ANIMATIONS
+══════════════════════════════════════════════════════ */
+function initAnimations() {
+
+  const scroller = window.innerWidth > 768 ? document.body : window;
+
+  // NAV SCROLL
+  ScrollTrigger.create({
+    scroller,
+    trigger: document.body, start: 'top -80px',
+    onEnter: () => document.getElementById('nav').classList.add('stuck'),
+    onLeaveBack: () => document.getElementById('nav').classList.remove('stuck')
+  });
+
+  // ── HERO ENTRANCE ──
+  const heroTL = gsap.timeline({ delay: .2 });
+  heroTL
+    .to('#hero-eyebrow .hero-eyebrow-inner', { y: 0, duration: 1, ease: 'power3.out' })
+    .to('#hero-h1 .hero-h1-line span', { y: 0, duration: 1.2, stagger: .15, ease: 'power4.out' }, .2)
+    .to('#hero-sub', { opacity: 1, y: 0, duration: .9, ease: 'power3.out' }, .7)
+    .to('#hero-actions', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, .85)
+    .to('#hero-stats', { opacity: 1, duration: .7, ease: 'power2.out' }, 1)
+    .to('#hero-scroll', { opacity: 1, duration: .6 }, 1.3);
+
+  // ── HERO SCROLL OUT ──
+  ScrollTrigger.create({
+    scroller, trigger: '#hero', start: 'top top', end: 'bottom top',
+    onUpdate(self) {
+      const p = self.progress;
+      gsap.set('#hero-h1', { y: p * 80, opacity: 1 - p * 1.5 });
+      gsap.set('#hero-sub', { y: p * 50, opacity: Math.max(0, 1 - p * 2) });
+      gsap.set('#hero-actions', { y: p * 40, opacity: Math.max(0, 1 - p * 2.5) });
+      gsap.set('#hero-stats', { y: p * 30, opacity: Math.max(0, 1 - p * 3) });
+    }
+  });
+
+  // ── ABOUT ──
+  ScrollTrigger.create({
+    scroller, trigger: '#about', start: 'top 75%',
+    onEnter() {
+      gsap.to('#about-tag span', { x: 0, opacity: 1, duration: .7, ease: 'power3.out' });
+      gsap.to('#about-head .line span', { y: 0, duration: 1, stagger: .12, ease: 'power4.out', delay: .1 });
+      gsap.to('#about-body', { opacity: 1, y: 0, duration: .9, delay: .4, ease: 'power3.out' });
+      gsap.to('#about-cta', { opacity: 1, y: 0, duration: .8, delay: .55, ease: 'power3.out' });
+      gsap.to('#trainer-panel', { x: 0, opacity: 1, duration: 1.1, delay: .2, ease: 'power4.out' });
+    }
+  });
+
+  // ── STACKED CARDS ──
+  const pin = document.getElementById('stacked-pin');
+  if (pin && window.innerWidth > 768) {
+    const cardH = 560;
+    const numCards = 3;
+    pin.style.height = (100 + numCards * 80) + 'vh';
+
+    // Initial stacking
+    gsap.set('#card-0', { y: 0, scale: 1, rotation: 0 });
+    gsap.set('#card-1', { y: 20, scale: .97, rotation: 1.5 });
+    gsap.set('#card-2', { y: 40, scale: .94, rotation: 3 });
+
+    // Reveal header
+    ScrollTrigger.create({
+      scroller, trigger: '#stacked-pin', start: 'top 80%',
+      onEnter() {
+        gsap.fromTo('#stacked-header', { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 1, ease: 'power3.out' });
+      }
+    });
+
+    // Card unstack scroll
+    const cardTL = gsap.timeline({
+      scrollTrigger: {
+        scroller, trigger: '#stacked-pin',
+        start: 'top top', end: 'bottom bottom',
+        scrub: 1.2,
+      }
+    });
+    cardTL
+      .to('#card-0', { y: -cardH * 1.1, opacity: 0, scale: .92, rotation: -3, ease: 'power2.inOut' }, 0)
+      .to('#card-1', { y: 0, scale: 1, rotation: 0, ease: 'power2.inOut' }, 0)
+      .to('#card-2', { y: 20, scale: .97, rotation: 1.5, ease: 'power2.inOut' }, 0)
+      .to('#card-1', { y: -cardH * 1.1, opacity: 0, scale: .92, rotation: -3, ease: 'power2.inOut' }, .5)
+      .to('#card-2', { y: 0, scale: 1, rotation: 0, ease: 'power2.inOut' }, .5);
+  }
+
+  // ── PARALLAX QUOTE ──
+  ScrollTrigger.create({
+    scroller, trigger: '#parallax-sec', start: 'top 80%',
+    onEnter() {
+      gsap.fromTo('#parallax-text', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' });
+    }
+  });
+  gsap.to('#parallax-text', {
+    y: -60,
+    scrollTrigger: { scroller, trigger: '#parallax-sec', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
+  });
+  ['#pr1','#pr2','#pr3','#pr4'].forEach((id, i) => {
+    gsap.to(id, { rotation: 360 * (i%2===0?1:-1), duration: 30 + i*8, repeat: -1, ease: 'none' });
+    gsap.to(id, { y: (i+1) * -20, scrollTrigger: { scroller, trigger: '#parallax-sec', start: 'top bottom', end: 'bottom top', scrub: 1 + i*.3 } });
+  });
+
+  // ── ACTIVITIES ──
+  gsap.fromTo('#act-grid .act-card',
+    { y: 60, opacity: 0, scale: .93 },
+    { y: 0, opacity: 1, scale: 1, stagger: .1, duration: .9, ease: 'power3.out',
+      scrollTrigger: { scroller, trigger: '#act-grid', start: 'top 75%' }
+    }
+  );
+
+  // ── STATS ──
+  gsap.fromTo('#stats-grid .sg-item',
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: .1, duration: .8, ease: 'power3.out',
+      scrollTrigger: { scroller, trigger: '#stats-grid', start: 'top 75%' }
+    }
+  );
+
+  // Counter animation
+  const counterObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.getAttribute('data-count'));
+      if (!target) return;
+      const start = performance.now();
+      const dur = 1800;
+      function tick(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = target >= 1000 ? (p >= 1 ? '1000+' : Math.floor(ease * target) + '') : Math.floor(ease * target) + '+';
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target >= 1000 ? '1000+' : target + '+';
+      }
+      requestAnimationFrame(tick);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: .5 });
+  document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+
+  // ── TESTIMONIALS HORIZONTAL ──
+  const tTrack = document.getElementById('t-track');
+  if (tTrack && window.innerWidth > 768) {
+    ScrollTrigger.create({
+      scroller,
+      trigger: '#t-pin-wrapper',
+      start: 'top top', end: 'bottom bottom',
+      scrub: 1,
+      onUpdate(self) {
+        const cards = tTrack.querySelectorAll('.t-card');
+        const totalW = (cards.length) * (380 + 24) + 380 + 60;
+        const maxX = -(totalW - window.innerWidth);
+        gsap.set(tTrack, { x: maxX * self.progress * 1.1 });
+      }
+    });
+  }
+
+  // ── DEMO GRID ──
+  gsap.fromTo('#demo-grid',
+    { y: 60, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+      scrollTrigger: { scroller, trigger: '#demo-grid', start: 'top 75%' }
+    }
+  );
+
+  // ── LOC GRID ──
+  gsap.fromTo('#loc-grid > *',
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: .15, duration: .9, ease: 'power3.out',
+      scrollTrigger: { scroller, trigger: '#loc-grid', start: 'top 75%' }
+    }
+  );
+
+  // ── 3D TILT ──
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      gsap.to(card, { rotateY: x * 12, rotateX: -y * 12, transformPerspective: 800, duration: .4, ease: 'power2.out' });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { rotateY: 0, rotateX: 0, duration: .6, ease: 'elastic.out(1,.8)' });
+    });
+  });
+
+  // ── MAGNETIC BUTTONS ──
+  document.querySelectorAll('.mag-btn').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      gsap.to(btn, { x: x * .25, y: y * .25, duration: .4, ease: 'power2.out' });
+    });
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.8)' });
+    });
+  });
+
+  ScrollTrigger.refresh();
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE NAV
+══════════════════════════════════════════════════════ */
+let mobOpen = false;
+function toggleMob() {
+  mobOpen = !mobOpen;
+  const m = document.getElementById('mob-nav');
+  m.style.display = mobOpen ? 'flex' : 'none';
+}
+
+/* ══════════════════════════════════════════════════════
+   FORM
+══════════════════════════════════════════════════════ */
+function handleForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('form-btn');
+  btn.textContent = '✅ Request Received — We\'ll Call You Soon!';
+  btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  btn.style.color = 'white';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Book My Free Demo ✦';
+    btn.style.background = ''; btn.style.color = '';
+    btn.disabled = false;
+    e.target.reset();
+  }, 5000);
+}
+
+/* NAV SCROLL HIGHLIGHT */
+window.addEventListener('smoothscroll', e => {
+  const y = e.detail.scrollY;
+  document.querySelectorAll('section[id]').forEach(s => {
+    if (y >= s.offsetTop - 300) {
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + s.id ? 'var(--goldb)' : '';
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

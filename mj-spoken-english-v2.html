@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJ Spoken English — Speak With Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   ROOT + RESET
+═══════════════════════════════════════════════ */
+:root {
+  --ink:      #08090a;
+  --ink-2:    #111318;
+  --ink-3:    #1a1d24;
+  --gold:     #c9922a;
+  --gold-hi:  #e8b84b;
+  --gold-lo:  #7a5518;
+  --cream:    #faf8f4;
+  --cream-2:  #f2ede4;
+  --mist:     rgba(255,255,255,0.06);
+  --mist-2:   rgba(255,255,255,0.03);
+  --border:   rgba(255,255,255,0.08);
+  --border-l: rgba(0,0,0,0.07);
+  --r:        24px;
+  --r-lg:     36px;
+  --r-xl:     52px;
+  --ease:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════════════ */
+.cursor {
+  position: fixed; z-index: 9999;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s, width 0.35s var(--spring), height 0.35s var(--spring), background 0.3s;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed; z-index: 9998;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(201,146,42,0.5); pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: transform 0.18s var(--ease), width 0.35s var(--spring), height 0.35s var(--spring), opacity 0.3s;
+}
+body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width: 56px; height: 56px; opacity: 0.5; }
+
+/* ═══════════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════════ */
+#loader {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+  transition: opacity 0.9s var(--ease), visibility 0.9s;
+}
+#loader.out { opacity: 0; visibility: hidden; }
+.ldr-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 300; letter-spacing: 0.15em;
+  color: transparent;
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold), var(--gold-lo));
+  -webkit-background-clip: text; background-clip: text;
+  animation: ldrReveal 1.2s var(--ease) forwards;
+  opacity: 0; transform: translateY(20px);
+}
+@keyframes ldrReveal { to { opacity: 1; transform: translateY(0); } }
+.ldr-line { width: 180px; height: 1px; background: rgba(255,255,255,0.08); overflow: hidden; border-radius: 99px; }
+.ldr-progress {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, var(--gold-lo), var(--gold-hi));
+  animation: ldrProgress 1.4s var(--ease) forwards;
+  border-radius: 99px;
+}
+@keyframes ldrProgress { to { width: 100%; } }
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; width: calc(100% - 48px); max-width: 1100px;
+  border-radius: 20px;
+  padding: 0 28px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,11,14,0.5);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border);
+  transition: all 0.5s var(--ease);
+}
+nav.dense {
+  background: rgba(8,9,10,0.85);
+  border-color: rgba(201,146,42,0.15);
+  box-shadow: 0 8px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem; font-weight: 600; letter-spacing: 0.05em;
+  color: var(--cream); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo-accent {
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5);
+  text-decoration: none; transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--gold-hi); }
+.nav-pill {
+  background: linear-gradient(135deg, var(--gold), var(--gold-lo));
+  color: var(--ink) !important; padding: 9px 22px;
+  border-radius: 99px; font-weight: 700 !important;
+  transition: box-shadow 0.3s, transform 0.3s !important;
+}
+.nav-pill:hover { box-shadow: 0 0 28px rgba(201,146,42,0.45); transform: translateY(-1px); }
+.nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.nav-burger span { width: 22px; height: 1.5px; background: rgba(255,255,255,0.6); border-radius: 2px; transition: 0.3s; display: block; }
+.mob-nav {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(8,9,10,0.97); backdrop-filter: blur(40px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 44px;
+}
+.mob-nav.on { display: flex; }
+.mob-nav a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem; font-weight: 600; color: rgba(255,255,255,0.7);
+  text-decoration: none; transition: color 0.3s;
+  letter-spacing: 0.04em;
+}
+.mob-nav a:hover { color: var(--gold-hi); }
+.mob-close { position: absolute; top: 28px; right: 28px; font-size: 1.5rem; color: rgba(255,255,255,0.4); cursor: pointer; }
+
+/* ═══════════════════════════════════════════════
+   HERO — CINEMATIC
+═══════════════════════════════════════════════ */
+#hero {
+  min-height: 100svh; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; text-align: center;
+}
+.hero-canvas {
+  position: absolute; inset: 0; z-index: 0;
+}
+/* Animated gradient mesh */
+.mesh {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 50%, rgba(201,146,42,0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 70% at 80% 30%, rgba(201,146,42,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 50% 90%, rgba(201,146,42,0.05) 0%, transparent 70%),
+    var(--ink-2);
+  animation: meshShift 12s ease-in-out infinite alternate;
+}
+@keyframes meshShift {
+  0%   { background-position: 0% 50%, 100% 0%, 50% 100%; }
+  100% { background-position: 100% 50%, 0% 100%, 50% 0%;  }
+}
+/* Stars / grain overlay */
+.grain {
+  position: absolute; inset: 0; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+/* Floating golden orbs */
+.orb { position: absolute; border-radius: 50%; pointer-events: none; }
+.orb-a {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(201,146,42,0.18) 0%, transparent 70%);
+  top: -150px; right: -150px; filter: blur(40px);
+  animation: orbDrift 14s ease-in-out infinite;
+}
+.orb-b {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(201,146,42,0.1) 0%, transparent 70%);
+  bottom: -100px; left: -80px; filter: blur(60px);
+  animation: orbDrift 18s ease-in-out infinite reverse;
+}
+@keyframes orbDrift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(40px,-50px) scale(1.07); }
+  66%      { transform: translate(-30px,30px) scale(0.95); }
+}
+/* Subtle lines */
+.hero-lines {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+}
+.hero-content { position: relative; z-index: 2; padding: 0 24px; max-width: 920px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 36px;
+  opacity: 0; animation: riseIn 1s 0.2s var(--ease) forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px; width: 32px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.hero-h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.4rem, 8vw, 7.5rem);
+  font-weight: 300; line-height: 0.98;
+  letter-spacing: -0.02em; margin-bottom: 32px;
+  opacity: 0; animation: riseIn 1.1s 0.35s var(--ease) forwards;
+}
+.hero-h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold-hi) 0%, var(--gold) 50%, var(--gold-lo) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 300;
+  color: rgba(255,255,255,0.45); max-width: 540px; margin: 0 auto 52px;
+  line-height: 1.75; letter-spacing: 0.01em;
+  opacity: 0; animation: riseIn 1s 0.5s var(--ease) forwards;
+}
+.hero-actions {
+  display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+  opacity: 0; animation: riseIn 1s 0.65s var(--ease) forwards;
+}
+.btn-glow {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  padding: 17px 40px; border-radius: 99px; font-size: 0.88rem;
+  font-weight: 600; letter-spacing: 0.04em; text-decoration: none;
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  color: var(--ink); overflow: hidden;
+  transition: transform 0.35s var(--spring), box-shadow 0.35s;
+}
+.btn-glow::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+  border-radius: 99px;
+}
+.btn-glow::after {
+  content: ''; position: absolute;
+  inset: -2px; border-radius: 99px; z-index: -1;
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold), var(--gold-lo));
+  filter: blur(16px); opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-glow:hover { transform: translateY(-3px) scale(1.02); }
+.btn-glow:hover::after { opacity: 0.8; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 17px 38px; border-radius: 99px; font-size: 0.88rem;
+  font-weight: 500; letter-spacing: 0.04em; text-decoration: none;
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  transition: all 0.35s var(--ease);
+}
+.btn-ghost:hover {
+  border-color: rgba(201,146,42,0.4); color: var(--gold-hi);
+  background: rgba(201,146,42,0.06);
+}
+.hero-scroll {
+  position: absolute; bottom: 44px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0; animation: riseIn 1s 1.1s var(--ease) forwards;
+}
+.scroll-label { font-size: 0.66rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.25); }
+.scroll-mouse {
+  width: 22px; height: 34px; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 99px; display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 6px;
+}
+.scroll-dot {
+  width: 3px; height: 6px; background: var(--gold); border-radius: 99px;
+  animation: scrollBob 2s ease-in-out infinite;
+}
+@keyframes scrollBob { 0%,100%{transform:translateY(0);opacity:1} 80%{transform:translateY(10px);opacity:0} }
+@keyframes riseIn { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════════════
+   SECTION SHELL
+═══════════════════════════════════════════════ */
+.s { padding: 130px 6%; position: relative; }
+.s-cream { background: var(--cream); color: var(--ink); }
+.s-cream-2 { background: var(--cream-2); color: var(--ink); }
+.s-dark { background: var(--ink-2); }
+.s-darkest { background: var(--ink); }
+.wrap { max-width: 1160px; margin: 0 auto; }
+.tag {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 16px;
+}
+.s-cream .tag, .s-cream-2 .tag { color: var(--gold-lo); }
+.head {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 300; line-height: 1.08; letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+.head em { font-style: italic; color: var(--gold); }
+.s-cream .head, .s-cream-2 .head { color: var(--ink); }
+.deck {
+  font-size: 1.05rem; font-weight: 300;
+  color: rgba(255,255,255,0.45); max-width: 520px; line-height: 1.8;
+}
+.s-cream .deck, .s-cream-2 .deck { color: rgba(0,0,0,0.45); }
+
+/* ═══════════════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════════════ */
+[data-reveal] {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.85s var(--ease), transform 0.85s var(--ease);
+}
+[data-reveal="left"]  { transform: translateX(-40px); }
+[data-reveal="right"] { transform: translateX(40px); }
+[data-reveal="scale"] { transform: scale(0.94); }
+[data-reveal].seen { opacity: 1; transform: none; }
+[data-delay="1"] { transition-delay: 0.1s; }
+[data-delay="2"] { transition-delay: 0.2s; }
+[data-delay="3"] { transition-delay: 0.3s; }
+[data-delay="4"] { transition-delay: 0.4s; }
+[data-delay="5"] { transition-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════════ */
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 80px; align-items: center;
+  margin-top: 80px;
+}
+/* Trainer card — glassmorphism on dark */
+.trainer-glass {
+  position: relative;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+}
+.trainer-glass::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+.trainer-photo {
+  height: 340px; position: relative; overflow: hidden;
+  background: linear-gradient(160deg, #1a1d24, #0e1116);
+  display: flex; align-items: center; justify-content: center;
+}
+.trainer-photo::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
+  background: linear-gradient(to bottom, transparent, rgba(10,11,14,0.6));
+}
+.trainer-monogram {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: linear-gradient(145deg, rgba(201,146,42,0.2), rgba(201,146,42,0.05));
+  border: 1px solid rgba(201,146,42,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem; font-weight: 600; color: var(--gold);
+  position: relative; z-index: 1;
+  box-shadow: 0 0 60px rgba(201,146,42,0.2), inset 0 0 40px rgba(201,146,42,0.05);
+}
+.trainer-body { padding: 32px 36px; }
+.trainer-name-lg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; font-weight: 600; color: var(--cream);
+  margin-bottom: 4px;
+}
+.trainer-role-sm { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+.trainer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.chip {
+  padding: 6px 16px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  background: rgba(201,146,42,0.08); border: 1px solid rgba(201,146,42,0.2);
+  color: var(--gold); letter-spacing: 0.04em;
+}
+/* Floating stat card */
+.stat-float {
+  position: absolute; top: 40px; right: -28px;
+  background: rgba(250,248,244,0.92);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 20px; padding: 22px 28px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  z-index: 10;
+}
+.sf-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem; font-weight: 700; color: var(--ink); line-height: 1;
+}
+.sf-lbl { font-size: 0.73rem; color: rgba(0,0,0,0.45); font-weight: 500; margin-top: 4px; }
+/* Highlights */
+.hl-list { list-style: none; margin-top: 36px; }
+.hl-list li {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+  transition: opacity 0.3s;
+}
+.hl-list li:last-child { border-bottom: none; }
+.hl-list li:hover { opacity: 0.8; }
+.hl-ico {
+  width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(145deg, rgba(201,146,42,0.12), rgba(201,146,42,0.04));
+  border: 1px solid rgba(201,146,42,0.15);
+  display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
+}
+.hl-txt strong { font-weight: 600; font-size: 0.93rem; color: var(--ink); display: block; margin-bottom: 2px; }
+.hl-txt span { font-size: 0.83rem; color: rgba(0,0,0,0.45); line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════
+   COURSES
+═══════════════════════════════════════════════ */
+.courses-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 52px;
+}
+.courses-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.c-card {
+  position: relative; border-radius: var(--r-lg); overflow: hidden;
+  padding: 44px 36px 40px;
+  background: var(--cream);
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: transform 0.5s var(--spring), box-shadow 0.5s var(--ease);
+  cursor: pointer; group: true;
+}
+.c-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(145deg, rgba(8,9,10,0.97) 0%, rgba(20,24,32,0.96) 100%);
+  opacity: 0; transition: opacity 0.45s var(--ease);
+  border-radius: var(--r-lg);
+}
+.c-card:hover { transform: translateY(-10px); box-shadow: 0 40px 80px rgba(0,0,0,0.2); }
+.c-card:hover::after { opacity: 1; }
+.c-card:hover .c-num { color: rgba(201,146,42,0.15); }
+.c-card:hover .c-icon-wrap { border-color: rgba(201,146,42,0.3); background: rgba(201,146,42,0.08); }
+.c-card:hover .c-title { color: var(--cream); }
+.c-card:hover .c-text { color: rgba(255,255,255,0.45); }
+.c-card:hover .c-feat { color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.07); }
+.c-card:hover .c-feat::before { color: var(--gold); }
+.c-card:hover .c-dur { color: rgba(255,255,255,0.3); }
+.c-card:hover .c-btn { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.c-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem; font-weight: 700; line-height: 1;
+  color: rgba(0,0,0,0.05); position: absolute; top: 20px; right: 28px;
+  transition: color 0.45s;
+}
+.c-icon-wrap {
+  width: 60px; height: 60px; border-radius: 18px;
+  background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; margin-bottom: 28px; position: relative; z-index: 1;
+  transition: all 0.4s;
+}
+.c-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem; font-weight: 600; color: var(--ink);
+  margin-bottom: 12px; line-height: 1.2; position: relative; z-index: 1; transition: color 0.4s;
+}
+.c-text {
+  font-size: 0.85rem; color: rgba(0,0,0,0.45); line-height: 1.65;
+  margin-bottom: 24px; position: relative; z-index: 1; transition: color 0.4s;
+}
+.c-feats { margin-bottom: 28px; position: relative; z-index: 1; }
+.c-feat {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.82rem; color: rgba(0,0,0,0.5);
+  padding: 7px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+  transition: color 0.4s, border-color 0.4s;
+}
+.c-feat::before { content: '✦'; color: var(--gold-lo); font-size: 0.6rem; flex-shrink: 0; transition: color 0.4s; }
+.c-dur { font-size: 0.75rem; color: rgba(0,0,0,0.3); margin-bottom: 24px; position: relative; z-index: 1; transition: color 0.4s; }
+.c-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 11px 26px; border-radius: 99px; font-size: 0.8rem; font-weight: 600;
+  text-decoration: none; position: relative; z-index: 1;
+  border: 1px solid rgba(0,0,0,0.15); color: var(--ink);
+  transition: all 0.4s; letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════
+   ACTIVITIES
+═══════════════════════════════════════════════ */
+.act-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 60px; }
+.act-card {
+  border-radius: var(--r);
+  padding: 30px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  display: flex; align-items: center; gap: 18px;
+  transition: all 0.4s var(--ease);
+  position: relative; overflow: hidden;
+}
+.act-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold-lo), var(--gold-hi));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.act-card:hover {
+  background: rgba(201,146,42,0.06);
+  border-color: rgba(201,146,42,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+.act-card:hover::before { transform: scaleX(1); }
+.act-card:hover .act-title { color: var(--gold-hi); }
+.act-ico {
+  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+  background: rgba(201,146,42,0.08); border: 1px solid rgba(201,146,42,0.15);
+  display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+}
+.act-title { font-weight: 600; font-size: 0.95rem; color: var(--cream); transition: color 0.3s; }
+.act-sub { font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════
+   STATS / WHY
+═══════════════════════════════════════════════ */
+.stats-band {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 70px;
+}
+.sb-item {
+  padding: 56px 40px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  position: relative; overflow: hidden;
+  transition: background 0.4s;
+}
+.sb-item:last-child { border-right: none; }
+.sb-item:hover { background: rgba(201,146,42,0.05); }
+.sb-item::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,146,42,0.3), transparent);
+  opacity: 0; transition: opacity 0.4s;
+}
+.sb-item:hover::before { opacity: 1; }
+.sb-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem; font-weight: 300; line-height: 1;
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.sb-lbl { font-size: 0.82rem; color: rgba(255,255,255,0.35); margin-top: 10px; letter-spacing: 0.06em; }
+.feat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.feat-card {
+  border-radius: var(--r-lg); padding: 40px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  transition: all 0.4s var(--ease);
+  position: relative; overflow: hidden;
+}
+.feat-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(145deg, rgba(201,146,42,0.06), transparent);
+  opacity: 0; transition: opacity 0.4s; border-radius: var(--r-lg);
+}
+.feat-card:hover { border-color: rgba(201,146,42,0.2); transform: translateY(-6px); box-shadow: 0 30px 70px rgba(0,0,0,0.2); }
+.feat-card:hover::after { opacity: 1; }
+.feat-ico { font-size: 2rem; margin-bottom: 22px; position: relative; z-index: 1; }
+.feat-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 600; color: var(--cream);
+  margin-bottom: 12px; position: relative; z-index: 1;
+}
+.feat-desc { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.7; position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════════════ */
+.t-slider { position: relative; overflow: hidden; margin-top: 60px; }
+.t-track { display: flex; transition: transform 0.7s cubic-bezier(0.77,0,0.175,1); }
+.t-page { min-width: 100%; display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; padding: 2px; }
+.t-card {
+  border-radius: var(--r-lg); padding: 36px;
+  background: var(--cream);
+  border: 1px solid rgba(0,0,0,0.06);
+  position: relative; overflow: hidden;
+  transition: transform 0.4s var(--spring), box-shadow 0.4s;
+}
+.t-card::before {
+  content: '"';
+  position: absolute; top: -10px; right: 24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 7rem; color: rgba(0,0,0,0.04); line-height: 1;
+  pointer-events: none;
+}
+.t-card:hover { transform: translateY(-7px); box-shadow: 0 30px 70px rgba(0,0,0,0.12); }
+.t-stars { color: var(--gold); font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 18px; }
+.t-quote { font-size: 0.92rem; color: rgba(0,0,0,0.6); line-height: 1.75; margin-bottom: 28px; font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; }
+.t-who { display: flex; align-items: center; gap: 14px; }
+.t-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ink), var(--ink-3));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-weight: 600;
+  font-size: 1.1rem; color: var(--gold);
+  border: 1px solid rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+.t-nm { font-weight: 600; font-size: 0.88rem; color: var(--ink); }
+.t-rl { font-size: 0.75rem; color: rgba(0,0,0,0.4); margin-top: 2px; }
+.t-controls { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 40px; }
+.t-btn {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.1); background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem; color: var(--ink);
+  transition: all 0.3s var(--ease);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.t-btn:hover { border-color: var(--gold); color: var(--gold); transform: scale(1.1); }
+.t-dots { display: flex; gap: 8px; }
+.t-dot {
+  height: 5px; border-radius: 99px; cursor: pointer;
+  background: rgba(0,0,0,0.12); transition: all 0.4s var(--ease);
+  width: 5px;
+}
+.t-dot.on { width: 26px; background: var(--gold); }
+
+/* ═══════════════════════════════════════════════
+   DEMO FORM
+═══════════════════════════════════════════════ */
+.demo-shell {
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(20px);
+}
+.demo-l {
+  padding: 70px 56px; position: relative;
+  background: linear-gradient(145deg, rgba(201,146,42,0.07) 0%, rgba(201,146,42,0.02) 100%);
+  border-right: 1px solid var(--border);
+}
+.demo-l::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,146,42,0.4), transparent);
+}
+.demo-r { padding: 70px 56px; }
+.demo-info { margin-top: 44px; display: flex; flex-direction: column; gap: 22px; }
+.di { display: flex; align-items: flex-start; gap: 14px; }
+.di-icon { font-size: 1rem; margin-top: 2px; opacity: 0.6; }
+.di-t { font-size: 0.83rem; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.di-t strong { color: rgba(255,255,255,0.7); display: block; margin-bottom: 1px; font-weight: 500; }
+/* Form */
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.f-group { margin-bottom: 14px; }
+.f-group label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+.f-group input, .f-group select {
+  width: 100%; padding: 15px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 14px; color: var(--cream);
+  font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+  outline: none; transition: all 0.3s;
+}
+.f-group input::placeholder { color: rgba(255,255,255,0.2); }
+.f-group input:focus, .f-group select:focus {
+  border-color: rgba(201,146,42,0.4);
+  background: rgba(201,146,42,0.06);
+  box-shadow: 0 0 0 3px rgba(201,146,42,0.1);
+}
+.f-group select option { background: #1a1d24; }
+.f-submit {
+  width: 100%; padding: 17px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  color: var(--ink); font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem; font-weight: 700; border: none; cursor: pointer;
+  letter-spacing: 0.04em; margin-top: 6px;
+  transition: all 0.35s var(--spring); position: relative; overflow: hidden;
+}
+.f-submit::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+.f-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,146,42,0.35); }
+.f-submit:hover::before { left: 100%; }
+
+/* ═══════════════════════════════════════════════
+   LOCATION
+═══════════════════════════════════════════════ */
+.loc-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: stretch; margin-top: 60px; }
+.loc-info {
+  background: var(--ink-3); border-radius: var(--r-lg); padding: 48px;
+  border: 1px solid var(--border); display: flex; flex-direction: column; gap: 0;
+}
+.loc-row {
+  display: flex; gap: 16px; padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+.loc-row:last-of-type { border-bottom: none; }
+.loc-ico { font-size: 1.1rem; margin-top: 2px; opacity: 0.5; flex-shrink: 0; }
+.loc-text strong { font-weight: 600; font-size: 0.88rem; color: var(--cream); display: block; margin-bottom: 3px; }
+.loc-text span { font-size: 0.82rem; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.loc-text a { color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.3s; }
+.loc-text a:hover { color: var(--gold); }
+.loc-btns { display: flex; gap: 12px; margin-top: 36px; }
+.loc-btn {
+  flex: 1; padding: 14px; border-radius: 12px;
+  font-size: 0.82rem; font-weight: 600; text-decoration: none;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: all 0.3s var(--ease);
+}
+.loc-btn-call { background: var(--gold); color: var(--ink); }
+.loc-btn-call:hover { box-shadow: 0 8px 28px rgba(201,146,42,0.4); transform: translateY(-2px); }
+.loc-btn-wa { background: rgba(37,211,102,0.1); border: 1px solid rgba(37,211,102,0.25); color: #25d366; }
+.loc-btn-wa:hover { background: rgba(37,211,102,0.18); transform: translateY(-2px); }
+.map-frame {
+  border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid var(--border); min-height: 400px;
+}
+.map-frame iframe { width: 100%; height: 100%; min-height: 400px; border: none; display: block; }
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+footer {
+  background: #040507; padding: 80px 6% 36px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.footer-top {
+  max-width: 1160px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 70px;
+  padding-bottom: 60px; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.f-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem; font-weight: 600; color: var(--cream);
+}
+.f-brand span {
+  background: linear-gradient(135deg, var(--gold-hi), var(--gold));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.f-blurb { font-size: 0.83rem; color: rgba(255,255,255,0.3); line-height: 1.75; margin: 18px 0 28px; max-width: 260px; }
+.socials { display: flex; gap: 10px; }
+.soc {
+  width: 38px; height: 38px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.03);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.4); font-size: 1rem; text-decoration: none;
+  transition: all 0.3s;
+}
+.soc:hover { background: rgba(201,146,42,0.1); border-color: rgba(201,146,42,0.25); color: var(--gold); transform: translateY(-3px); }
+.f-col h5 {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 22px;
+}
+.f-col ul { list-style: none; }
+.f-col li { margin-bottom: 11px; }
+.f-col a {
+  font-size: 0.85rem; color: rgba(255,255,255,0.35); text-decoration: none;
+  transition: all 0.3s;
+}
+.f-col a:hover { color: var(--gold-hi); padding-left: 5px; }
+.footer-bot {
+  max-width: 1160px; margin: 28px auto 0;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.footer-bot p { font-size: 0.75rem; color: rgba(255,255,255,0.18); }
+
+/* ═══════════════════════════════════════════════
+   FLOATING CONTACT
+═══════════════════════════════════════════════ */
+.float-bar {
+  position: fixed; bottom: 28px; right: 28px; z-index: 900;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.fb {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  transition: all 0.35s var(--spring);
+  border: 1px solid transparent;
+}
+.fb-call { background: var(--ink-3); border-color: var(--border); color: var(--cream); }
+.fb-wa   { background: #25d366; color: white; }
+.fb:hover { transform: scale(1.14) translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+.fb-call:hover { border-color: var(--gold); }
+
+/* ═══════════════════════════════════════════════
+   PARALLAX DIVIDERS
+═══════════════════════════════════════════════ */
+.divider {
+  height: 1px; max-width: 1160px; margin: 0 auto;
+  background: linear-gradient(90deg, transparent, rgba(201,146,42,0.2), transparent);
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .courses-grid { grid-template-columns: 1fr 1fr; }
+  .act-grid { grid-template-columns: 1fr 1fr; }
+  .feat-grid { grid-template-columns: 1fr 1fr; }
+  .demo-shell { grid-template-columns: 1fr; }
+  .demo-l { border-right: none; border-bottom: 1px solid var(--border); }
+  .loc-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .stat-float { display: none; }
+}
+@media (max-width: 768px) {
+  .s { padding: 90px 5%; }
+  nav { width: calc(100% - 32px); top: 12px; }
+  .nav-links { display: none; }
+  .nav-burger { display: flex; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .act-grid { grid-template-columns: 1fr; }
+  .stats-band { grid-template-columns: 1fr; }
+  .sb-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .feat-grid { grid-template-columns: 1fr; }
+  .t-page { grid-template-columns: 1fr; }
+  .demo-l, .demo-r { padding: 48px 32px; }
+  .f-row { grid-template-columns: 1fr; }
+  .courses-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+  .footer-top { grid-template-columns: 1fr; gap: 40px; }
+  .cursor, .cursor-ring { display: none; }
+}
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; align-items: center; }
+  .btn-glow, .btn-ghost { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ldr-word">MJ Spoken English</div>
+  <div class="ldr-line"><div class="ldr-progress"></div></div>
+</div>
+
+<!-- FLOATING CONTACT -->
+<div class="float-bar">
+  <a class="fb fb-call" href="tel:+918384081679" title="Call">📞</a>
+  <a class="fb fb-wa" href="https://wa.me/918384081679" target="_blank" title="WhatsApp">💬</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">
+    <span class="nav-logo-accent">MJ</span> Spoken English
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#demo" class="nav-pill">Book Demo</a></li>
+  </ul>
+  <div class="nav-burger" onclick="openMob()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <span class="mob-close" onclick="closeMob()">✕</span>
+  <a href="#hero"    onclick="closeMob()">Home</a>
+  <a href="#about"   onclick="closeMob()">About</a>
+  <a href="#courses" onclick="closeMob()">Courses</a>
+  <a href="#why"     onclick="closeMob()">Why Us</a>
+  <a href="#reviews" onclick="closeMob()">Reviews</a>
+  <a href="#demo"    onclick="closeMob()">Book Demo</a>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <div class="hero-canvas">
+    <div class="mesh"></div>
+    <div class="grain"></div>
+    <div class="hero-lines"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Raj Nagar Extension · Ghaziabad · Est. 2016</div>
+    <h1 class="hero-h1">Speak English<br>With <em>Confidence</em></h1>
+    <p class="hero-sub">Transform your communication skills with expert training by Mansi Jain — Personality Development Trainer with 8+ years of proven impact.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-glow">✦ Book Free Demo Class</a>
+      <a href="#courses" class="btn-ghost">Explore Courses →</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+  </div>
+</section>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<section id="about" class="s s-cream">
+  <div class="wrap">
+    <div data-reveal>
+      <div class="tag">About</div>
+      <h2 class="head">Meet Your <em>Trainer</em></h2>
+      <p class="deck">MJ Spoken English Classes — a professional communication institute in Ghaziabad led by expert trainer Mansi Jain.</p>
+    </div>
+    <div class="about-grid">
+      <div style="position:relative;" data-reveal="left">
+        <div class="trainer-glass">
+          <div class="trainer-photo">
+            <div class="trainer-monogram">MJ</div>
+          </div>
+          <div class="trainer-body">
+            <div class="trainer-name-lg">Mansi Jain</div>
+            <div class="trainer-role-sm">Personality Development Trainer</div>
+            <div class="trainer-chips">
+              <span class="chip">Public Speaking</span>
+              <span class="chip">Accent Training</span>
+              <span class="chip">PD Coach</span>
+              <span class="chip">Interview Prep</span>
+            </div>
+          </div>
+        </div>
+        <div class="stat-float">
+          <div class="sf-num">8+</div>
+          <div class="sf-lbl">Years of<br>Experience</div>
+        </div>
+      </div>
+      <div data-reveal="right" data-delay="2">
+        <ul class="hl-list">
+          <li>
+            <div class="hl-ico">🎓</div>
+            <div class="hl-txt">
+              <strong>8+ Years Teaching Experience</strong>
+              <span>Proven track record of transforming students' confidence and communication abilities.</span>
+            </div>
+          </li>
+          <li>
+            <div class="hl-ico">🌟</div>
+            <div class="hl-txt">
+              <strong>Personality Development Training</strong>
+              <span>Holistic coaching that builds complete persona — not just language, but presence.</span>
+            </div>
+          </li>
+          <li>
+            <div class="hl-ico">🗣️</div>
+            <div class="hl-txt">
+              <strong>Accent & Pronunciation Mastery</strong>
+              <span>Sound polished and professional in every conversation with targeted accent training.</span>
+            </div>
+          </li>
+          <li>
+            <div class="hl-ico">🎤</div>
+            <div class="hl-txt">
+              <strong>Public Speaking Training</strong>
+              <span>Speak in front of audiences with ease, authority, and genuine confidence.</span>
+            </div>
+          </li>
+          <li>
+            <div class="hl-ico">💼</div>
+            <div class="hl-txt">
+              <strong>Interview Preparation</strong>
+              <span>Get ready to crack interviews with fluent, confident English communication skills.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ COURSES ══════════════ -->
+<section id="courses" class="s s-darkest">
+  <div class="wrap">
+    <div class="courses-header">
+      <div data-reveal>
+        <div class="tag">Programs</div>
+        <h2 class="head">Our <em>Courses</em></h2>
+      </div>
+      <p class="deck" data-reveal data-delay="2" style="margin:0;max-width:340px;">Structured for every level — from beginner to professional communicator.</p>
+    </div>
+    <div class="courses-grid">
+      <div class="c-card" data-reveal data-delay="1">
+        <div class="c-num">01</div>
+        <div class="c-icon-wrap">📘</div>
+        <div class="c-title">Basic English Course</div>
+        <div class="c-text">Perfect starting point. Master the fundamentals and speak confidently in everyday conversations.</div>
+        <div class="c-feats">
+          <div class="c-feat">Grammar fundamentals</div>
+          <div class="c-feat">Sentence formation</div>
+          <div class="c-feat">Everyday conversation</div>
+        </div>
+        <div class="c-dur">⏱ 2 – 3 Months</div>
+        <a href="#demo" class="c-btn">Join Now ↗</a>
+      </div>
+      <div class="c-card" data-reveal data-delay="2">
+        <div class="c-num">02</div>
+        <div class="c-icon-wrap">🎯</div>
+        <div class="c-title">Communication Skills</div>
+        <div class="c-text">Build the confidence to speak fluently at work, in public, and in high-stakes interviews.</div>
+        <div class="c-feats">
+          <div class="c-feat">Public speaking</div>
+          <div class="c-feat">Confidence building</div>
+          <div class="c-feat">Interview practice</div>
+        </div>
+        <div class="c-dur">⏱ 3 – 4 Months</div>
+        <a href="#demo" class="c-btn">Join Now ↗</a>
+      </div>
+      <div class="c-card" data-reveal data-delay="3">
+        <div class="c-num">03</div>
+        <div class="c-icon-wrap">🚀</div>
+        <div class="c-title">Advanced Spoken English</div>
+        <div class="c-text">Master professional communication, accent refinement and commanding presentation skills.</div>
+        <div class="c-feats">
+          <div class="c-feat">Accent training</div>
+          <div class="c-feat">Professional communication</div>
+          <div class="c-feat">Presentation mastery</div>
+        </div>
+        <div class="c-dur">⏱ 4 – 6 Months</div>
+        <a href="#demo" class="c-btn">Join Now ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ACTIVITIES ══════════════ -->
+<section id="activities" class="s s-dark">
+  <div class="wrap">
+    <div data-reveal style="text-align:center;max-width:560px;margin:0 auto 0;">
+      <div class="tag">Class Activities</div>
+      <h2 class="head">Learn by <em>Doing</em></h2>
+      <p class="deck" style="margin:0 auto;">Interactive activities that make learning English practical, engaging, and deeply effective.</p>
+    </div>
+    <div class="act-grid">
+      <div class="act-card" data-reveal data-delay="1"><div class="act-ico">💬</div><div><div class="act-title">Group Discussions</div><div class="act-sub">Fluency through structured debate</div></div></div>
+      <div class="act-card" data-reveal data-delay="2"><div class="act-ico">🎭</div><div><div class="act-title">Role Play Sessions</div><div class="act-sub">Real-life scenario practice</div></div></div>
+      <div class="act-card" data-reveal data-delay="3"><div class="act-ico">📖</div><div><div class="act-title">Story Narration</div><div class="act-sub">Vocabulary and expression building</div></div></div>
+      <div class="act-card" data-reveal data-delay="4"><div class="act-ico">🎮</div><div><div class="act-title">Vocabulary Games</div><div class="act-sub">Entertaining and effective learning</div></div></div>
+      <div class="act-card" data-reveal data-delay="3"><div class="act-ico">🎤</div><div><div class="act-title">Presentation Practice</div><div class="act-sub">Speak with authority and presence</div></div></div>
+      <div class="act-card" data-reveal data-delay="4"><div class="act-ico">🤝</div><div><div class="act-title">Conversation Practice</div><div class="act-sub">Natural, fluent daily speaking</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ WHY CHOOSE ══════════════ -->
+<section id="why" class="s s-darkest">
+  <div class="wrap">
+    <div data-reveal style="text-align:center;max-width:560px;margin:0 auto 60px;">
+      <div class="tag">Why MJ Classes</div>
+      <h2 class="head">The <em>Difference</em></h2>
+      <p class="deck" style="margin:0 auto;">We don't just teach English — we engineer confidence.</p>
+    </div>
+    <div class="stats-band" data-reveal>
+      <div class="sb-item">
+        <div class="sb-num" data-count="1000">0</div>
+        <div class="sb-lbl">Students Trained</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-num" data-count="8">0</div>
+        <div class="sb-lbl">Years of Excellence</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-num">4.9★</div>
+        <div class="sb-lbl">Average Rating</div>
+      </div>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card" data-reveal data-delay="1">
+        <div class="feat-ico">🎯</div>
+        <div class="feat-name">Personal Attention</div>
+        <div class="feat-desc">Small batch sizes ensure every student receives individual feedback and focused guidance from Mansi Jain personally.</div>
+      </div>
+      <div class="feat-card" data-reveal data-delay="2">
+        <div class="feat-ico">⚡</div>
+        <div class="feat-name">Interactive Classes</div>
+        <div class="feat-desc">Activity-based, dynamic sessions that keep you engaged and make every concept stick through practice and play.</div>
+      </div>
+      <div class="feat-card" data-reveal data-delay="3">
+        <div class="feat-ico">🌟</div>
+        <div class="feat-name">Confidence Building</div>
+        <div class="feat-desc">We build the mindset and personality traits that make communication truly powerful — beyond just vocabulary.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ REVIEWS ══════════════ -->
+<section id="reviews" class="s s-cream-2">
+  <div class="wrap">
+    <div data-reveal style="text-align:center;max-width:560px;margin:0 auto;">
+      <div class="tag">Testimonials</div>
+      <h2 class="head">Student <em>Stories</em></h2>
+      <p class="deck" style="margin:0 auto;">Real transformations, real voices from students who changed their lives at MJ Classes.</p>
+    </div>
+    <div class="t-slider" data-reveal>
+      <div class="t-track" id="ttrack">
+        <div class="t-page">
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"Best place to learn spoken English. The teaching style is remarkably interactive and Mansi ma'am explains everything with such clarity. I feel genuinely confident now."</div>
+            <div class="t-who"><div class="t-av">P</div><div><div class="t-nm">Priya Sharma</div><div class="t-rl">Communication Skills Batch</div></div></div>
+          </div>
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"After joining this class my confidence improved dramatically. I used to be terrified of speaking in public — now I give presentations without any hesitation."</div>
+            <div class="t-who"><div class="t-av">R</div><div><div class="t-nm">Rahul Gupta</div><div class="t-rl">Advanced Spoken English</div></div></div>
+          </div>
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"Mansi ma'am clears doubts individually and encourages students every step of the way. The role plays and group discussions made me improve so much faster."</div>
+            <div class="t-who"><div class="t-av">A</div><div><div class="t-nm">Ankita Verma</div><div class="t-rl">Basic English Course</div></div></div>
+          </div>
+        </div>
+        <div class="t-page">
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"MJ Spoken English completely changed how I communicate. I cracked my dream job interview because of the training I received here. Cannot recommend this enough."</div>
+            <div class="t-who"><div class="t-av">S</div><div><div class="t-nm">Siddharth Mishra</div><div class="t-rl">Interview Preparation</div></div></div>
+          </div>
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"Mansi ma'am is an exceptional trainer. Her approach to personality development alongside English speaking is unique and extremely effective for real life situations."</div>
+            <div class="t-who"><div class="t-av">N</div><div><div class="t-nm">Nidhi Agarwal</div><div class="t-rl">Communication Skills Batch</div></div></div>
+          </div>
+          <div class="t-card">
+            <div class="t-stars">★★★★★</div>
+            <div class="t-quote">"The vocabulary games and story sessions made learning genuinely enjoyable. I never imagined I'd love an English class this much. My pronunciation has transformed."</div>
+            <div class="t-who"><div class="t-av">V</div><div><div class="t-nm">Vivek Kumar</div><div class="t-rl">Basic English Course</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="t-controls">
+      <button class="t-btn" onclick="tPrev()">←</button>
+      <div class="t-dots">
+        <div class="t-dot on" onclick="tGo(0)"></div>
+        <div class="t-dot" onclick="tGo(1)"></div>
+      </div>
+      <button class="t-btn" onclick="tNext()">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ DEMO FORM ══════════════ -->
+<section id="demo" class="s s-dark">
+  <div class="wrap">
+    <div data-reveal style="text-align:center;max-width:480px;margin:0 auto 56px;">
+      <div class="tag">Free Demo</div>
+      <h2 class="head">Book Your <em>Demo</em></h2>
+      <p class="deck" style="margin:0 auto;">Experience our methodology free. We'll reach out within 24 hours to schedule your class.</p>
+    </div>
+    <div class="demo-shell" data-reveal>
+      <div class="demo-l">
+        <div class="tag">Why Book?</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;line-height:1.2;margin-bottom:8px;">Zero risk,<br><em style="color:var(--gold);font-style:italic;">full experience.</em></h3>
+        <div class="demo-info">
+          <div class="di"><span class="di-icon">✦</span><div class="di-t"><strong>Live Class Experience</strong>See exactly how we teach before committing</div></div>
+          <div class="di"><span class="di-icon">✦</span><div class="di-t"><strong>Meet Mansi Jain</strong>Get to know your trainer personally</div></div>
+          <div class="di"><span class="di-icon">✦</span><div class="di-t"><strong>No Obligation</strong>Completely free with zero pressure</div></div>
+          <div class="di"><span class="di-icon">📞</span><div class="di-t"><strong>Phone</strong>+91 83840 81679</div></div>
+          <div class="di"><span class="di-icon">📍</span><div class="di-t"><strong>Location</strong>Plot 88, River Heights Rd,<br>Raj Nagar Extension, Ghaziabad</div></div>
+          <div class="di"><span class="di-icon">🕐</span><div class="di-t"><strong>Hours</strong>Mon – Sat, 9 AM – 7 PM</div></div>
+        </div>
+      </div>
+      <div class="demo-r">
+        <form onsubmit="handleSubmit(event)">
+          <div class="f-row">
+            <div class="f-group">
+              <label>Your Name</label>
+              <input type="text" placeholder="Full Name" required>
+            </div>
+            <div class="f-group">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="+91 00000 00000" required>
+            </div>
+          </div>
+          <div class="f-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="you@example.com">
+          </div>
+          <div class="f-group">
+            <label>Course Interested In</label>
+            <select required>
+              <option value="" disabled selected>Select a course</option>
+              <option>Basic English Course</option>
+              <option>Communication Skills Course</option>
+              <option>Advanced Spoken English</option>
+              <option>Not sure yet — help me choose</option>
+            </select>
+          </div>
+          <button type="submit" class="f-submit" id="fsub">Book My Free Demo Class ✦</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ LOCATION ══════════════ -->
+<section id="contact" class="s s-darkest">
+  <div class="wrap">
+    <div data-reveal style="text-align:center;max-width:480px;margin:0 auto 0;">
+      <div class="tag">Location</div>
+      <h2 class="head">Find <em>Us</em></h2>
+      <p class="deck" style="margin:0 auto;">Conveniently situated in Raj Nagar Extension, Ghaziabad — come visit or call us.</p>
+    </div>
+    <div class="loc-grid">
+      <div class="loc-info" data-reveal>
+        <div class="loc-row">
+          <span class="loc-ico">📍</span>
+          <div class="loc-text">
+            <strong>Address</strong>
+            <span>Plot No. 88, River Heights Rd,<br>Raj Nagar Extension,<br>Ghaziabad, Uttar Pradesh</span>
+          </div>
+        </div>
+        <div class="loc-row">
+          <span class="loc-ico">📞</span>
+          <div class="loc-text">
+            <strong>Phone</strong>
+            <span><a href="tel:+918384081679">+91 83840 81679</a></span>
+          </div>
+        </div>
+        <div class="loc-row">
+          <span class="loc-ico">💬</span>
+          <div class="loc-text">
+            <strong>WhatsApp</strong>
+            <span><a href="https://wa.me/918384081679" target="_blank">Chat with us on WhatsApp</a></span>
+          </div>
+        </div>
+        <div class="loc-row">
+          <span class="loc-ico">🕐</span>
+          <div class="loc-text">
+            <strong>Class Timings</strong>
+            <span>Monday – Saturday: 9 AM – 7 PM</span>
+          </div>
+        </div>
+        <div class="loc-btns">
+          <a href="tel:+918384081679" class="loc-btn loc-btn-call">📞 Call Now</a>
+          <a href="https://wa.me/918384081679" target="_blank" class="loc-btn loc-btn-wa">💬 WhatsApp</a>
+        </div>
+      </div>
+      <div class="map-frame" data-reveal data-delay="2">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.12!2d77.4543!3d28.6921!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDQxJzMxLjYiTiA3N8KwMjcnMTUuNSJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+          allowfullscreen="" loading="lazy" title="MJ Spoken English Location">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="f-brand"><span>MJ</span> Spoken English</div>
+      <p class="f-blurb">Building confident communicators in Raj Nagar Extension, Ghaziabad. Expert training by Mansi Jain — Personality Development Trainer.</p>
+      <div class="socials">
+        <a href="#" class="soc" title="Instagram">📷</a>
+        <a href="#" class="soc" title="Facebook">👍</a>
+        <a href="#" class="soc" title="YouTube">▶</a>
+        <a href="https://wa.me/918384081679" class="soc" title="WhatsApp" target="_blank">💬</a>
+      </div>
+    </div>
+    <div class="f-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#activities">Activities</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#demo">Book Demo</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h5>Programs</h5>
+      <ul>
+        <li><a href="#courses">Basic English</a></li>
+        <li><a href="#courses">Communication Skills</a></li>
+        <li><a href="#courses">Advanced Spoken</a></li>
+        <li><a href="#demo">Free Demo Class</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <p>© 2024 MJ Spoken English Classes · Raj Nagar Extension, Ghaziabad · All rights reserved.</p>
+    <p>Crafted for confident communicators ✦</p>
+  </div>
+</footer>
+
+<script>
+/* ── LOADER ── */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('out'), 1700);
+});
+
+/* ── CUSTOM CURSOR ── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+/* ── NAVBAR ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('dense', window.scrollY > 60);
+});
+
+/* ── MOBILE MENU ── */
+const mob = document.getElementById('mobNav');
+function openMob() { mob.classList.add('on'); document.body.style.overflow='hidden'; }
+function closeMob() { mob.classList.remove('on'); document.body.style.overflow=''; }
+
+/* ── SCROLL REVEAL ── */
+const revEls = document.querySelectorAll('[data-reveal]');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); ro.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revEls.forEach(el => ro.observe(el));
+
+/* ── COUNTER ── */
+function animCount(el) {
+  const raw = el.getAttribute('data-count');
+  if (!raw) return;
+  const target = parseInt(raw);
+  const dur = 1800;
+  const start = performance.now();
+  const suffix = target >= 1000 ? '+' : '+';
+  const fmt = n => target >= 1000 ? (n >= 1000 ? '1000+' : n+'') : n+'';
+  function tick(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(Math.floor(ease * target));
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = target >= 1000 ? '1000+' : target + '+';
+  }
+  requestAnimationFrame(tick);
+}
+const cro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animCount(e.target); cro.unobserve(e.target); } });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => cro.observe(el));
+
+/* ── TESTIMONIAL SLIDER ── */
+let tCur = 0; const tTotal = 2;
+let tAuto;
+function tGo(n) {
+  tCur = n;
+  document.getElementById('ttrack').style.transform = `translateX(-${n * 100}%)`;
+  document.querySelectorAll('.t-dot').forEach((d,i) => d.classList.toggle('on', i === n));
+}
+function tNext() { tGo((tCur + 1) % tTotal); }
+function tPrev() { tGo((tCur - 1 + tTotal) % tTotal); }
+function startAuto() { tAuto = setInterval(tNext, 5500); }
+function stopAuto()  { clearInterval(tAuto); }
+startAuto();
+document.querySelector('.t-slider').addEventListener('mouseenter', stopAuto);
+document.querySelector('.t-slider').addEventListener('mouseleave', startAuto);
+// Touch swipe
+let tsx = 0;
+document.querySelector('.t-slider').addEventListener('touchstart', e => tsx = e.touches[0].clientX);
+document.querySelector('.t-slider').addEventListener('touchend', e => {
+  const d = tsx - e.changedTouches[0].clientX;
+  if (d > 50) tNext(); else if (d < -50) tPrev();
+});
+
+/* ── FORM SUBMIT ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById('fsub');
+  btn.textContent = '✅ Request Received! We\'ll call you soon.';
+  btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+  btn.style.color = 'white';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Book My Free Demo Class ✦';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.disabled = false;
+    e.target.reset();
+  }, 5000);
+}
+
+/* ── PARALLAX HERO ── */
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  document.querySelector('.hero-content').style.transform = `translateY(${y * 0.22}px)`;
+  document.querySelector('.mesh').style.transform = `translateY(${y * 0.08}px)`;
+  document.querySelector('.hero-scroll').style.opacity = Math.max(0, 1 - y / 200);
+});
+
+/* ── ACTIVE NAV HIGHLIGHT ── */
+const secs = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secs.forEach(s => { if (window.scrollY >= s.offsetTop - 250) cur = s.id; });
+  document.querySelectorAll('.nav-links a:not(.nav-pill)').forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--gold-hi)' : '';
+  });
+});
+</script>
+</body>
+</html>
